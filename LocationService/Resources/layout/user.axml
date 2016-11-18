@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="36.0dp"
+        android:id="@+id/space2" />
+    <TextView
+        android:text="Username (letters only, no spaces):"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textUser" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="38.5dp"
+        android:id="@+id/editUser"
+        android:singleLine="true"
+        android:background="@android:color/darker_gray" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="36.0dp"
+        android:id="@+id/space2" />
+    <TextView
+        android:text="Password/PIN (4 or more characters):"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textPass" />
+    <EditText
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="32.5dp"
+        android:id="@+id/editPass"
+        android:singleLine="false"
+        android:editable="true"
+        android:background="@android:color/darker_gray" />
+    <TextView
+        android:text="Repeat password:"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:id="@+id/textPass2" />
+    <EditText
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="32.5dp"
+        android:id="@+id/editPass2"
+        android:singleLine="false"
+        android:editable="true"
+        android:visibility="invisible"
+        android:background="@android:color/darker_gray" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="36.0dp"
+        android:id="@+id/space2" />
+    <Button
+        android:text="OK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonOK" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/space1" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="36.0dp"
+        android:id="@+id/space2" />
+    <TextView
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textError" />
+    <Button
+        android:text="Cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cancel" />
+</LinearLayout>

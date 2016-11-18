@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="start_service">Start Service</string>
+	<string name="stop_service">Stop Service</string>
+	<string name="app_name">LocationService</string>
+  <string name="set_user">Set username</string>
+  <string name="set_new_user">Set a new user</string>
+  <string name="app_name">LocationService</string>
+</resources>

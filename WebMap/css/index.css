@@ -1,0 +1,46 @@
+﻿body {
+    padding: 0;
+    margin: 0;
+}
+html, body, #map {
+    height: 100%;
+}
+
+.leaflet-verticalcenter {
+    position: absolute;
+    top: 50%; /* possible because the placeholder's parent is the map */
+    transform: translateY(-50%); /* using the CSS3 Transform technique */
+    padding-top: 10px; 
+}
+
+.leaflet-center {
+    position: absolute;
+    top: 50%; /* possible because the placeholder's parent is the map */
+    transform: translateY(-50%); /* using the CSS3 Transform technique */
+    left: 50%; /* possible because the placeholder's parent is the map */
+    transform: translateX(-50%); /* using the CSS3 Transform technique */
+    padding-top: -60px; 
+}
+.leaflet-verticalcenter .leaflet-control {
+    /* margin-bottom: 10px;  */
+}
+.leaflet-control-messagebox {
+	display: none; /* Initially hidden */
+	border: 2px solid red;
+	background-color: white;
+	padding: 3px 10px;
+}
+.leaflet-container .leaflet-control-mouseposition {
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 5px #bbb;
+  padding: 0 5px;
+  margin:0;
+  color: #333;
+  font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+.bigfont{
+  font-size: 1.5em;
+} 
+.smallfont{
+  font-size: 0.75em;
+} 

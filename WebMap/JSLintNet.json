@@ -1,0 +1,35 @@
+﻿{
+  "ignore": [
+    "\\js\\powerManagement.js",
+    "\\js\\jquery.mobile-1.4.3.min.js",
+    "\\js\\jquery.dataTables.min.js",
+    "\\js\\jquery-ui.min.js",
+    "\\js\\jquery-ui-timepicker-addon.js",
+    "\\js\\jquery-1.11.1.min.js",
+    "\\js\\fastclick.js",
+    "\\js\\dataTables.tableTools.min.js",
+    "\\js\\cordova-2.2.0.js"
+  ],
+  "options": {
+    "predef": {
+      "jQuery": true,
+      "popup": true,
+      "ttTime": true,
+      "Riders": true,
+      "Clubs": true,
+      "TTRider": true,
+      "ttApp": true,
+      "TTData": true,
+      "EventList": true,
+      "Entry": true,
+      "ttTable": true,
+      "Event": true,
+      "login": true,
+      "Course": true,
+      "TTTable": true
+    },
+    "bitwise": true,
+    "plusplus": true,
+    "white": true
+  }
+}

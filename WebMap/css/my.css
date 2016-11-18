@@ -1,0 +1,65 @@
+﻿
+            /* for real time display */
+            .realtime
+            {
+                text-align: center;
+                font-size: 250%;  
+                font-family:Arial;
+                font-stretch:extra-condensed;
+            }
+            .nextrider
+            {
+                text-align: center;
+                font-size: 250%;  
+                font-family:Arial;
+                font-stretch:extra-condensed;
+            }
+            .nextridertime
+            {
+                text-align: center;
+                font-size: 500%;  
+                font-family:Arial;
+                font-stretch:extra-condensed;
+            }
+            .bigbutton
+            {
+                height: 80px;
+                white-space:normal;
+            }
+            div label
+            {
+                text-align:right;
+                padding-top: 20px;
+                padding-right: 15px;
+            }
+            .notes
+            {
+                text-align: center;
+            }
+            body { -webkit-touch-callout: none; -webkit-text-size-adjust: none; -webkit-user-select: none; -webkit-highlight: none; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+
+    
+            table.display tbody td {  background: #ffffff;   }
+            table.display tr.even td.sorting_1 { background-color:lightgoldenrodyellow; }
+            table.display tr.odd td.sorting_1 { background-color: lightgoldenrodyellow; }
+            table.display td {font-size:20px}
+
+            table.rider {
+                width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            td.gridL {
+                color:darkblue;
+                text-align:right;
+                padding-top: 10px;
+                padding-right: 15px;
+            }
+            td.gridR {
+                font-weight:bold;
+                text-align:left;
+                padding-top: 10px;
+                padding-left: 15px;
+            }
+            .ui-link {margin-left: 35px;}
+            #map { height: 100%; }
