@@ -159,36 +159,78 @@ var myMap = (function ($) {
         createCorner('center', 'right');
 
     }
-   
 
-    // get the list of points to map
-    MapData.json('GetLocations', "POST", null, function (locs) {
+    //login();
 
-        // first point will be the latest one recorded, use this to centre the map
-        location = locs[0];
-        var options = { timeout: 5000, position: 'bottomleft' }
-        map = L.map('map', { messagebox: true }).setView([location.latitude, location.longitude], 14);
+    //function login() {
+    //    var form = $("#login");
+    //    $("#login").show();
+    //    $("#login").on("submitButton", handleLogin);
+    //}
 
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18
-            
-        }).addTo(map);
+    $("#login").click(function() {
+        var u, p, creds, form = $("#login");
+        //disable the button so we can't resubmit while we wait
+        $("#login").attr("disabled", "disabled");
+        u = $("#username").val();
+        p = $("#password").val();
+        //userRole = 0;
+
+        if (u !== '' && p !== '') {
+            creds = { name: u, pw: p, email: "", code: 0 };
+            MapData.json('Login', "POST", creds, function (res) {
+                if (res.pw == "" && res.name=="") {
+                    alert("Invalid username");
+                }
+                else if (res.pw == "") {
+                        alert("Invalid password");
+                    }
+
+                else {
+                    window.localStorage.username = u;
+                    window.localStorage.password = p;
+                     createMap();
+ 
+                }
+                $("#login").removeAttr("disabled");
+            });
+
+        } else {
+            alert("You must enter a username and password");
+            $("#login").removeAttr("disabled");
+        }
+        return false;
+    })
+
+    function createMap() {
+
+        // get the list of points to map
+        MapData.json('GetLocations', "POST", null, function (locs) {
+
+            // first point will be the latest one recorded, use this to centre the map
+            location = locs[0];
+            var options = { timeout: 5000, position: 'bottomleft' }
+            map = L.map('map', { messagebox: true }).setView([location.latitude, location.longitude], 14);
+
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18
+
+            }).addTo(map);
 
 
-        var index, count = locs.length;
-        var now = new Date();
-        var reggie = /(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
-        var dateArray, dateObj;
-        for (index = count - 1; index >= 0; index--)
-        {
-            
-            var loc = locs[index];
-            if (loc.latitude != 0) {
-                var dt = now;
-                // convert SQL date string to EU format
-                dateArray = reggie.exec(loc.recorded_at);
-                    dt   = new Date(
+            var index, count = locs.length;
+            var now = new Date();
+            var reggie = /(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
+            var dateArray, dateObj;
+            for (index = count - 1; index >= 0; index--) {
+
+                var loc = locs[index];
+                if (loc.latitude != 0) {
+                    var dt = now;
+                    // convert SQL date string to EU format
+                    dateArray = reggie.exec(loc.recorded_at);
+                    dt = new Date(
                     (+dateArray[3]),
                     (+dateArray[2]) - 1, // Careful, month starts at 0!
                     (+dateArray[1]),
@@ -196,32 +238,34 @@ var myMap = (function ($) {
                     (+dateArray[5]),
                     (+dateArray[6])
                 );
-                var timediff = now.valueOf() - dt.valueOf();
-                var colour = 'blue';
-                if (index === 0) {
-                    colour = 'purple';
-                    if (timediff < 60 * 60000) {
-                        // newer than one hour
-                        colour = 'red';
+                    var timediff = now.valueOf() - dt.valueOf();
+                    var colour = 'blue';
+                    if (index === 0) {
+                        colour = 'purple';
+                        if (timediff < 60 * 60000) {
+                            // newer than one hour
+                            colour = 'red';
+                        }
                     }
-                }
-                else {
-                    if (timediff > 24 * 60 * 60000)
-                        colour = 'gray';
-                }
+                    else {
+                        if (timediff > 24 * 60 * 60000)
+                            colour = 'gray';
+                    }
 
-                var circle = L.circle([loc.latitude, loc.longitude], (index === 0) ? 60 : 15, {
-                    color: colour,
-                    fillColor: colour,
-                    fillOpacity: 0.5
-                }).addTo(map);
-                circle.bindPopup(loc.recorded_at);
+                    var circle = L.circle([loc.latitude, loc.longitude], (index === 0) ? 60 : 15, {
+                        color: colour,
+                        fillColor: colour,
+                        fillOpacity: 0.5
+                    }).addTo(map);
+                    circle.bindPopup(loc.recorded_at);
+                }
             }
-        }
-        //AddControls();
+            //AddControls();
 
 
-    }, true, null);
+        }, true, null);
+
+    }
 
     function AddControls() {
 
