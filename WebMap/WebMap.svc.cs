@@ -152,10 +152,16 @@ namespace WebMap
 
         
 
-        public IEnumerable<Location> GetLocations()
+        public IEnumerable<Location> GetLocations(int userID)
         {
-
-            string query = string.Format("SELECT TOP {0} lat, lon, dt, id, owner FROM locations order by id desc",300);
+            int howMany = 300;
+            if (userID  < 0)
+            {
+                //just updating map, only get a few
+                userID = -userID;
+                howMany = 5;
+            }
+            string query = string.Format("SELECT TOP {0} lat, lon, dt, id FROM locations  where owner = {1} order by id desc", howMany,userID);
 
             LogEntry log = new LogEntry(getIP(), "GetLocations", null);
 
@@ -187,10 +193,10 @@ namespace WebMap
                     double latitude = Convert.ToDouble(dr["lat"]);
                     double longitude = Convert.ToDouble(dr["lon"]);
                     DateTime time = (DateTime)dr["dt"];
-                    Int32 owner = 0;
-                    if (dr["owner"] != DBNull.Value)
-                        owner = Convert.ToInt32(dr["owner"]);
-                    locations.Add(new Location(latitude, longitude, time.ToString(), owner));
+                    //Int32 owner = 0;
+                    //if (dr["owner"] != DBNull.Value)
+                    //    owner = Convert.ToInt32(dr["owner"]);
+                    locations.Add(new Location(latitude, longitude, time.ToString(), userID));
                 };
             }
             log.Result = locations.Count.ToString() + " locations";

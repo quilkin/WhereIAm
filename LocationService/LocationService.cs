@@ -75,6 +75,9 @@ namespace LocationService
             
             _player = Android.Media.MediaPlayer.Create(this, Resource.Raw.Alarm);
             //TTS.Speak("service started");
+
+            binder = new LocationServiceBinder(this);
+
         }
         private string DBTime(DateTime t)
         {

@@ -33,9 +33,9 @@
         //}, true, null);
 
         //myMap.create();
-        setTimeout(function () {
-            window.location.reload(1);
-        }, 300000);
+        //setTimeout(function () {
+        //    window.location.reload(1);
+        //}, 300000);
     });
 
     function onPause() {

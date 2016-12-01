@@ -79,6 +79,7 @@ namespace LocationService
                 StopService(new Intent("com.xamarin.LocationService"));
                 stop.Enabled = false;
                 start.Enabled = true;
+            //    locationServiceConnection.activity.isBound = false;
             };
             user.Click += delegate
             {
@@ -201,13 +202,15 @@ namespace LocationService
 		{
 			base.OnDestroy ();
 
-			if (!isConfigurationChange) {
-				if (isBound) {
-					UnbindService (locationServiceConnection);
-					isBound = false;
-				}
-			}
-		}
+            if (!isConfigurationChange)
+            {
+                if (isBound)
+                {
+                    UnbindService(locationServiceConnection);
+                    isBound = false;
+                }
+            }
+        }
 
 		// return the service connection if there is a configuration change
 		public override Java.Lang.Object OnRetainNonConfigurationInstance ()

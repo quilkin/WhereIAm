@@ -24,7 +24,7 @@ namespace WebMap
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/GetLocations", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         [ServiceKnownType(typeof(List<Location>))]
-        IEnumerable<Location> GetLocations();
+        IEnumerable<Location> GetLocations(int userID);
     }
 
 }

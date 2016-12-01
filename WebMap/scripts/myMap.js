@@ -7,6 +7,7 @@ var MapData = (function ($) {
     "use strict";
 
     var MapData = {};
+    
 
     function urlBase() {
         return "http://localhost/WebMap/WebMap.svc/";
@@ -69,7 +70,9 @@ var MapData = (function ($) {
 var myMap = (function ($) {
     "use strict";
 
+
     aggressiveEnabled: false;
+    var userID = 0;
     // distance to check if on track or not (approx 20 m)
     var near = 0.0002;
     // distance to check if too far from track (appox 500m)
@@ -79,7 +82,7 @@ var myMap = (function ($) {
     var offTrack2 = " metres off course. Correct course is to the "
 
     var myMap = {},
-        map,
+        map = null,
         location,
         path,
         aggressiveEnabled,
@@ -140,7 +143,14 @@ var myMap = (function ($) {
         shadowSize: [41, 41]
     });
 
-
+    var user = window.localStorage.username;
+    var pw = window.localStorage.password;
+    if (user != undefined && user.length > 0) {
+        $("#username").val(user);
+    }
+    if (pw != undefined && pw.length > 0) {
+        $("#password").val(pw) ;
+    }
     // Create additional Control placeholders
     function addControlPlaceholders(map) {
         var corners = map._controlCorners,
@@ -160,13 +170,6 @@ var myMap = (function ($) {
 
     }
 
-    //login();
-
-    //function login() {
-    //    var form = $("#login");
-    //    $("#login").show();
-    //    $("#login").on("submitButton", handleLogin);
-    //}
 
     $("#login").click(function() {
         var u, p, creds, form = $("#login");
@@ -189,7 +192,13 @@ var myMap = (function ($) {
                 else {
                     window.localStorage.username = u;
                     window.localStorage.password = p;
-                     createMap();
+                    userID = res.id;
+
+                    createMap(userID,true);
+                    // refresh map every 5 minutes
+                    setTimeout(function () {
+                        updateMap(userID,false);
+                    }, 300000);
  
                 }
                 $("#login").removeAttr("disabled");
@@ -202,22 +211,17 @@ var myMap = (function ($) {
         return false;
     })
 
-    function createMap() {
-
+    function updateMap(userid, firstUpdate) {
         // get the list of points to map
-        MapData.json('GetLocations', "POST", null, function (locs) {
+        var tempID = userID;
+        if (!firstUpdate) {
+            tempID = -tempID;
+        }
+        MapData.json('GetLocations', "POST", tempID, function (locs) {
 
             // first point will be the latest one recorded, use this to centre the map
             location = locs[0];
-            var options = { timeout: 5000, position: 'bottomleft' }
-            map = L.map('map', { messagebox: true }).setView([location.latitude, location.longitude], 14);
-
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 18
-
-            }).addTo(map);
-
+            map.setView([location.latitude, location.longitude],14);
 
             var index, count = locs.length;
             var now = new Date();
@@ -260,12 +264,26 @@ var myMap = (function ($) {
                     circle.bindPopup(loc.recorded_at);
                 }
             }
-            //AddControls();
+
 
 
         }, true, null);
-
     }
+
+    function createMap(userid) {
+
+        map = L.map('map', { messagebox: true });
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 18
+
+        }).addTo(map);
+        updateMap(userID, 300);
+        //AddControls();
+    }
+      
+
+  
 
     function AddControls() {
 
