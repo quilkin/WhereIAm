@@ -16,8 +16,8 @@ namespace LocationService
 
     public class UrlBase
     {
-       //public static string urlBase = "http://www.quilkin.co.uk/Service1.svc/";
-        public static string urlBase = "http://CE568/WebMap/WebMap.svc/";
+       public static string urlBase = "http://www.quilkin.co.uk/Service1.svc/";
+       // public static string urlBase = "http://CE568/WebMap/WebMap.svc/";
     }
 
     [Activity (Label = "LocationService", MainLauncher = true)]
@@ -25,8 +25,8 @@ namespace LocationService
 	{
 		bool isBound = false;
 		bool isConfigurationChange = false;
-		LocationServiceBinder binder;
-		LocationServiceConnection locationServiceConnection;
+		//LocationServiceBinder binder;
+		//LocationServiceConnection locationServiceConnection;
       
 
 
@@ -41,11 +41,11 @@ namespace LocationService
 
             SetActions();
 
-			// restore from connection there was a configuration change, such as a device rotation
-			locationServiceConnection = LastNonConfigurationInstance as LocationServiceConnection;
+			//// restore from connection there was a configuration change, such as a device rotation
+			//locationServiceConnection = LastNonConfigurationInstance as LocationServiceConnection;
 
-			if (locationServiceConnection != null)
-				binder = locationServiceConnection.Binder;
+			//if (locationServiceConnection != null)
+			//	binder = locationServiceConnection.Binder;
 
 
         }
@@ -57,7 +57,7 @@ namespace LocationService
             var user = FindViewById<Button>(Resource.Id.setUsername);
 
 
-            stop.Enabled = false;
+           // stop.Enabled = false;
             if (Location.owner == 0)
             {
                 // need to log in before starting GPS service
@@ -193,69 +193,69 @@ namespace LocationService
 		{
 			base.OnStart ();
 
-			var locationServiceIntent = new Intent ("com.xamarin.LocationService");
-			locationServiceConnection = new LocationServiceConnection (this);
-			BindService (locationServiceIntent, locationServiceConnection, Bind.AutoCreate);
+			//var locationServiceIntent = new Intent ("com.xamarin.LocationService");
+			//locationServiceConnection = new LocationServiceConnection (this);
+			//BindService (locationServiceIntent, locationServiceConnection, Bind.AutoCreate);
 		}
 
 		protected override void OnDestroy ()
 		{
 			base.OnDestroy ();
 
-            if (!isConfigurationChange)
-            {
-                if (isBound)
-                {
-                    UnbindService(locationServiceConnection);
-                    isBound = false;
-                }
-            }
+            //if (!isConfigurationChange)
+            //{
+            //    if (isBound)
+            //    {
+            //        UnbindService(locationServiceConnection);
+            //        isBound = false;
+            //    }
+            //}
         }
 
-		// return the service connection if there is a configuration change
-		public override Java.Lang.Object OnRetainNonConfigurationInstance ()
-		{
-			base.OnRetainNonConfigurationInstance ();
+		//// return the service connection if there is a configuration change
+		//public override Java.Lang.Object OnRetainNonConfigurationInstance ()
+		//{
+		//	base.OnRetainNonConfigurationInstance ();
 
-			isConfigurationChange = true;
+		//	isConfigurationChange = true;
 
-			return locationServiceConnection;
-		}
+		//	return locationServiceConnection;
+		//}
 
-		class LocationServiceConnection : Java.Lang.Object, IServiceConnection
-		{
-			LocationActivity activity;
-			LocationServiceBinder binder;
+		//class LocationServiceConnection : Java.Lang.Object, IServiceConnection
+		//{
+		//	LocationActivity activity;
+		//	LocationServiceBinder binder;
 
-			public LocationServiceBinder Binder {
-				get {
-					return binder;
-				}
-			}
+		//	public LocationServiceBinder Binder {
+		//		get {
+		//			return binder;
+		//		}
+		//	}
 
-			public LocationServiceConnection (LocationActivity activity)
-			{
-				this.activity = activity;
-			}
+		//	public LocationServiceConnection (LocationActivity activity)
+		//	{
+		//		this.activity = activity;
+		//	}
           
-			public void OnServiceConnected (ComponentName name, IBinder service)
-			{
-				var LocationServiceBinder = service as LocationServiceBinder;
+		//	public void OnServiceConnected (ComponentName name, IBinder service)
+		//	{
+		//		var LocationServiceBinder = service as LocationServiceBinder;
 				
-				if (LocationServiceBinder != null) {
-					activity.binder = LocationServiceBinder;
-					activity.isBound = true;
+		//		if (LocationServiceBinder != null) {
+		//			activity.binder = LocationServiceBinder;
+		//			activity.isBound = true;
 
-					// keep instance for preservation across configuration changes
-					this.binder = LocationServiceBinder;
-				}
-			}
+		//			// keep instance for preservation across configuration changes
+		//			this.binder = LocationServiceBinder;
+		//		}
+		//	}
 
-			public void OnServiceDisconnected (ComponentName name)
-			{
-				activity.isBound = false;
-			}
-		}
+		//	public void OnServiceDisconnected (ComponentName name)
+		//	{
+		//		activity.isBound = false;
+		//	}
+		//}
 
      
 	}

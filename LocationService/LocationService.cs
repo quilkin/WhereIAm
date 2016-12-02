@@ -22,7 +22,7 @@ namespace LocationService
 	[IntentFilter(new String[]{"com.xamarin.LocationService"})]
 	public class LocationService : Service
 	{
-		LocationServiceBinder binder;
+		//LocationServiceBinder binder;
         Notification.Builder builder;
         NotificationManager notificationManager;
         Notification notification;
@@ -42,20 +42,21 @@ namespace LocationService
         public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
 		{
 			Log.Debug ("LocationService", "LocationService started");
-			StartServiceInForeground ();
+			StartService();
 			return StartCommandResult.Sticky;
 		}
 
-		void StartServiceInForeground ()
+		void StartService ()
 		{
 
             builder = new Notification.Builder(this)
                 .SetSmallIcon(Resource.Drawable.icon)//.setTicker(text).setWhen(time)
-                .SetAutoCancel(true).SetContentTitle("LocationService in foreground")
-                .SetContentText("LocationService is running in the foreground");
+                .SetContentTitle("Location Service is running")
+                .SetContentText("Location Service is running");
             notification = builder.Build();
             notificationManager = GetSystemService(Context.NotificationService) as NotificationManager;
             notificationID = (int)NotificationFlags.ForegroundService;
+            builder.SetAutoCancel(true);
             StartForeground (notificationID, notification);
 
             savedLocations = new List<Location>();
@@ -76,7 +77,7 @@ namespace LocationService
             _player = Android.Media.MediaPlayer.Create(this, Resource.Raw.Alarm);
             //TTS.Speak("service started");
 
-            binder = new LocationServiceBinder(this);
+            //binder = new LocationServiceBinder(this);
 
         }
         private string DBTime(DateTime t)
@@ -138,6 +139,7 @@ namespace LocationService
                         
                         string result = client.UploadString(UrlBase.urlBase + "SaveLocation", json);
                         builder.SetContentTitle(string.Format("lat:{0},long:{1}", position.Latitude.ToString("00.0000"), position.Longitude.ToString("00.0000")));
+                        builder.SetAutoCancel(true);
 
                         if (savedLocations.Count > 0)
                         {
@@ -152,6 +154,7 @@ namespace LocationService
                             builder.SetContentTitle(string.Format("{0} stored locations saved", savedLocations.Count));
                             savedLocations.Clear();
                         }
+                        
                         builder.SetContentText("Posted to Web at " + DateTime.Now.ToShortTimeString());
                         notification = builder.Build();
                         notificationManager.Notify(notificationID, notification);
@@ -266,26 +269,27 @@ namespace LocationService
 
         public override Android.OS.IBinder OnBind (Android.Content.Intent intent)
 		{
-			binder = new LocationServiceBinder (this);
-			return binder;
+            return null; 
+			//binder = new LocationServiceBinder (this);
+			//return binder;
         }
 
 
 	}
 
-	public class LocationServiceBinder : Binder
-	{
-		LocationService service;
+	//public class LocationServiceBinder : Binder
+	//{
+	//	LocationService service;
     
-		public LocationServiceBinder (LocationService service)
-		{
-			this.service = service;
-		}
+	//	public LocationServiceBinder (LocationService service)
+	//	{
+	//		this.service = service;
+	//	}
 
-		public LocationService GetLocationService ()
-		{
-			return service;
-		}
-	}
+	//	public LocationService GetLocationService ()
+	//	{
+	//		return service;
+	//	}
+	//}
 
 }

@@ -10,8 +10,8 @@ var MapData = (function ($) {
     
 
     function urlBase() {
-        return "http://localhost/WebMap/WebMap.svc/";
-     // return "http://www.quilkin.co.uk/Service1.svc/";
+      //  return "http://localhost/WebMap/WebMap.svc/";
+      return "http://www.quilkin.co.uk/Service1.svc/";
 
     }
     function webRequestFailed(handle, status, error) {
