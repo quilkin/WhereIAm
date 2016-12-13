@@ -18,6 +18,25 @@ namespace LocationService
         public static int owner;
     }
 
+    [BroadcastReceiver]
+    [IntentFilter(new[] { Intent.ActionBootCompleted } ,  Categories = new[] { "android.intent.category.HOME" })]
+    partial class BootReceiver : BroadcastReceiver
+    {
+
+        public override void OnReceive(Context context, Intent intent)
+        {
+
+            if ((intent.Action != null) &&
+                        (intent.Action ==
+                         Android.Content.Intent.ActionBootCompleted))
+            {         // Start the service or activity
+                context.ApplicationContext.StartService(new Intent(context, typeof(LocationService)));
+            }
+     
+
+        }
+    }
+
     [Service]
 	[IntentFilter(new String[]{"com.xamarin.LocationService"})]
 	public class LocationService : Service
@@ -48,11 +67,21 @@ namespace LocationService
 
 		void StartService ()
 		{
+            // Set up an intent so that tapping the notifications returns to this app:
+            //  Intent intent = new Intent(this, typeof(MainApplication));
+
+            // Create a PendingIntent; we're only using one PendingIntent (ID = 0):
+            //const int pendingIntentId = 0;
+            //PendingIntent pendingIntent =
+            //    PendingIntent.GetActivity(this, pendingIntentId, intent, PendingIntentFlags.OneShot);
+            ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(this);
+            Location.owner = prefs.GetInt("owner", 0);
 
             builder = new Notification.Builder(this)
                 .SetSmallIcon(Resource.Drawable.icon)//.setTicker(text).setWhen(time)
                 .SetContentTitle("Location Service is running")
                 .SetContentText("Location Service is running");
+                //.SetContentIntent(pendingIntent);
             notification = builder.Build();
             notificationManager = GetSystemService(Context.NotificationService) as NotificationManager;
             notificationID = (int)NotificationFlags.ForegroundService;
@@ -74,7 +103,7 @@ namespace LocationService
             locator.PositionChanged += Locator_PositionChanged;
             locator.PositionError += Locator_PositionError;
             
-            _player = Android.Media.MediaPlayer.Create(this, Resource.Raw.Alarm);
+           // _player = Android.Media.MediaPlayer.Create(this, Resource.Raw.Alarm);
             //TTS.Speak("service started");
 
             //binder = new LocationServiceBinder(this);
@@ -228,7 +257,7 @@ namespace LocationService
             else
             {
                 // warn user again
-                _player.Start();
+                //_player.Start();
                 builder.SetContentTitle("GPS error:");
                 builder.SetContentText("Trying to restart: " + DateTime.Now.ToShortTimeString());
                 notification = builder.Build();
@@ -249,7 +278,7 @@ namespace LocationService
             builder.SetContentText(e.Error.ToString() + ": " + DateTime.Now.ToShortTimeString());
             notification = builder.Build();
             notificationManager.Notify(notificationID, notification);
-            _player.Start();
+            //_player.Start();
 
             // create a timer to re-check and re-warn if necesssary
             TimerState s = new TimerState();
