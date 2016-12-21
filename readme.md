@@ -8,3 +8,4 @@ Server (Windows asp.net service; c#) displays location points for last 24 hours 
 ToDo:
  - notification alerts don't respond
  - storage of locations on device (when no internet available) not yet correct
+ - 
