@@ -3,6 +3,7 @@
 
 # database connection credentials
 Connect.cs
+WebMap/Connect.cs
 
 # User-specific files
 *.suo

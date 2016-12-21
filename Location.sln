@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Location", "Location\Location.csproj", "{836CE149-91A8-461A-BD71-CB4B9735DEB6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationService", "LocationService\LocationService.csproj", "{8E152737-78E2-4327-AF9B-4AFC49EC50E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMap", "WebMap\WebMap.csproj", "{1083953C-45E3-4A81-B21D-467338062990}"
@@ -22,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{836CE149-91A8-461A-BD71-CB4B9735DEB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{836CE149-91A8-461A-BD71-CB4B9735DEB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{836CE149-91A8-461A-BD71-CB4B9735DEB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{836CE149-91A8-461A-BD71-CB4B9735DEB6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8E152737-78E2-4327-AF9B-4AFC49EC50E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E152737-78E2-4327-AF9B-4AFC49EC50E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E152737-78E2-4327-AF9B-4AFC49EC50E7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
