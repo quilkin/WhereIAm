@@ -9,3 +9,5 @@ ToDo:
  - notification alerts don't respond
  - storage of locations on device (when no internet available) not yet correct
  - 
+ -
+  -
