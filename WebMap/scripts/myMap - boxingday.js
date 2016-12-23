@@ -10,8 +10,8 @@ var MapData = (function ($) {
     
 
     function urlBase() {
-      //  return "http://localhost/WebMap/WebMap.svc/";
-      return "http://www.quilkin.co.uk/WebMap.svc/";
+        return "http://localhost/WebMap/WebMap.svc/";
+      //return "http://www.quilkin.co.uk/Service1.svc/";
 
     }
     function webRequestFailed(handle, status, error) {
@@ -192,7 +192,7 @@ var myMap = (function ($) {
                 else {
                     window.localStorage.username = u;
                     window.localStorage.password = p;
-                    userID = res.id;
+                    userID = res.id
 
                     createMap(userID,true);
                     // refresh map every 5 minutes
@@ -223,47 +223,47 @@ var myMap = (function ($) {
             location = locs[0];
             map.setView([location.latitude, location.longitude],14);
 
-            var index, count = locs.length;
-            var now = new Date();
-            var reggie = /(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
-            var dateArray, dateObj;
-            for (index = count - 1; index >= 0; index--) {
+            //var index, count = locs.length;
+            //var now = new Date();
+            //var reggie = /(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
+            //var dateArray, dateObj;
+            //for (index = count - 1; index >= 0; index--) {
 
-                var loc = locs[index];
-                if (loc.latitude != 0) {
-                    var dt = now;
-                    // convert SQL date string to EU format
-                    dateArray = reggie.exec(loc.recorded_at);
-                    dt = new Date(
-                    (+dateArray[3]),
-                    (+dateArray[2]) - 1, // Careful, month starts at 0!
-                    (+dateArray[1]),
-                    (+dateArray[4]),
-                    (+dateArray[5]),
-                    (+dateArray[6])
-                );
-                    var timediff = now.valueOf() - dt.valueOf();
-                    var colour = 'blue';
-                    if (index === 0) {
-                        colour = 'purple';
-                        if (timediff < 60 * 60000) {
-                            // newer than one hour
-                            colour = 'red';
-                        }
-                    }
-                    else {
-                        if (timediff > 24 * 60 * 60000)
-                            colour = 'gray';
-                    }
+            //    var loc = locs[index];
+            //    if (loc.latitude != 0) {
+            //        var dt = now;
+            //        // convert SQL date string to EU format
+            //        dateArray = reggie.exec(loc.recorded_at);
+            //        dt = new Date(
+            //        (+dateArray[3]),
+            //        (+dateArray[2]) - 1, // Careful, month starts at 0!
+            //        (+dateArray[1]),
+            //        (+dateArray[4]),
+            //        (+dateArray[5]),
+            //        (+dateArray[6])
+            //    );
+            //        var timediff = now.valueOf() - dt.valueOf();
+            //        var colour = 'blue';
+            //        if (index === 0) {
+            //            colour = 'purple';
+            //            if (timediff < 60 * 60000) {
+            //                // newer than one hour
+            //                colour = 'red';
+            //            }
+            //        }
+            //        else {
+            //            if (timediff > 24 * 60 * 60000)
+            //                colour = 'gray';
+            //        }
 
-                    var circle = L.circle([loc.latitude, loc.longitude], (index === 0) ? 60 : 15, {
-                        color: colour,
-                        fillColor: colour,
-                        fillOpacity: 0.5
-                    }).addTo(map);
-                    circle.bindPopup(loc.recorded_at);
-                }
-            }
+            //        var circle = L.circle([loc.latitude, loc.longitude], (index === 0) ? 60 : 15, {
+            //            color: colour,
+            //            fillColor: colour,
+            //            fillOpacity: 0.5
+            //        }).addTo(map);
+            //        circle.bindPopup(loc.recorded_at);
+            //    }
+            //}
 
 
 
@@ -279,7 +279,7 @@ var myMap = (function ($) {
 
         }).addTo(map);
         updateMap(userID, 300);
-        //AddControls();
+        AddControls();
     }
       
 
@@ -315,6 +315,7 @@ var myMap = (function ($) {
 
         //L.easyButton('<span class="bigfont">&rarr;</span>', createRoute).addTo(map);
         L.easyButton('<span class="bigfont">&check;</span>', addPoint).addTo(map);
+        L.easyButton('<span class="bigfont">&check;&check;</span>', addPoint2).addTo(map);
         L.easyButton('<span class="bigfont">&cross;</span>', deletePoint).addTo(map);
         L.easyButton('<span class="bigfont">&odot;</span>', openDialog).addTo(map);
         bikeType = "Hybrid";
@@ -329,19 +330,35 @@ var myMap = (function ($) {
 
         var centre = map.getCenter();
         wayPoints.push(L.latLng(centre.lat, centre.lng));
-        //if (route == undefined) {
-        //if (routes.length == 0)
+
         var marker = L.marker([centre.lat, centre.lng]).addTo(map);
-       // responsiveVoice.speak("Added a point");
-        if (wayPoints.length === 1) {
-            marker = L.marker([centre.lat, centre.lng], { icon: greenIcon }).addTo(map);
-            markers.push(marker);
-            // this is first (starting) point. Need more points!
-            return;
-        }
+
+        //if (wayPoints.length === 1) {
+        //    marker = L.marker([centre.lat, centre.lng], { icon: greenIcon }).addTo(map);
+        //    markers.push(marker);
+        //    // this is first (starting) point. Need more points!
+        //    return;
+        //}
         
         markers.push(marker);
-        createRoute();
+       // createRoute();
+    }
+    function addPoint2() {
+
+        var centre = map.getCenter();
+        wayPoints.push(L.latLng(centre.lat, centre.lng));
+
+        //var marker = L.marker([centre.lat, centre.lng]).addTo(map);
+        var marker = L.marker([centre.lat, centre.lng], { icon: redIcon }).addTo(map);
+        //if (wayPoints.length === 1) {
+        //    marker = L.marker([centre.lat, centre.lng], { icon: greenIcon }).addTo(map);
+        //    markers.push(marker);
+        //    // this is first (starting) point. Need more points!
+        //    return;
+        //}
+
+        markers.push(marker);
+        // createRoute();
     }
     function deletePoint()
     {
@@ -352,7 +369,7 @@ var myMap = (function ($) {
         var marker = markers.pop();
         map.removeLayer(marker);
         wayPoints.pop();
-        createRoute();
+        //createRoute();
     }
     function openDialog() {
         dialog.open();

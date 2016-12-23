@@ -13,6 +13,6 @@ Server (Windows asp.net service; c#) displays location points for last 24 hours 
 ToDo:
  - notification alerts don't respond
  - storage of locations on device (when no internet available) not yet correct
-
- -
+ - login info sent non-securely
+ - button disables not working correctly - I haven't yet found out a way for the app to find out if the service is already running
   -
