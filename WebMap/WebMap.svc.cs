@@ -33,6 +33,14 @@ namespace WebMap
                 time.Year, time.Month.ToString("00"), time.Day.ToString("00"),
                 time.Hour.ToString("00"),time.Minute.ToString("00"),time.Second.ToString("00"));
         }
+        public static string TimeStringNoSecs(DateTime time)
+        {
+            if (time == DateTime.MinValue)
+                return System.DBNull.Value.ToString();
+            return string.Format("{0}{1}{2} {3}:{4}",
+                time.Year, time.Month.ToString("00"), time.Day.ToString("00"),
+                time.Hour.ToString("00"), time.Minute.ToString("00"));
+        }
 
         public WebMap()
         {
@@ -248,17 +256,17 @@ namespace WebMap
                     DateTime time2 = (DateTime)dr["dt"];
 
 
-                    double diffLat = latitude1 - latitude2;
-                    double diffLon = longitude1 - longitude2;
-                    double distance = Math.Sqrt(Math.Abs(diffLat * diffLat - diffLon * diffLon));
+                    double diffLat = Math.Abs(latitude1 - latitude2);
+                    double diffLon = Math.Abs(longitude1 - longitude2);
+                    double distance = Math.Sqrt(Math.Abs(diffLat * diffLat + diffLon * diffLon));
                     if (distance < 0.001)
                     {
                         // last two entries were same location. See if this is different now.
                         latitude2 = loc.Latitude;
                         longitude2 = loc.Longitude;
-                        diffLat = latitude1 - latitude2;
-                        diffLon = longitude1 - longitude2;
-                        distance = Math.Sqrt(Math.Abs(diffLat * diffLat - diffLon * diffLon));
+                        diffLat = Math.Abs(latitude1 - latitude2);
+                        diffLon = Math.Abs(longitude1 - longitude2);
+                        distance = Math.Sqrt(Math.Abs(diffLat * diffLat + diffLon * diffLon));
                         if (distance < 0.001)
                         {
                             // Still not moved much. Don't add new location, just update time for last one
@@ -272,7 +280,7 @@ namespace WebMap
                                     successRows = command.ExecuteNonQuery();
                                 }
                                 if (successRows == 1)
-                                    result = string.Format("Time updated for {0} at {2}", loc.Owner, DateTime.Now);
+                                    result = string.Format("Time updated for user {0} at {1}", loc.Owner, DateTime.Now);
                                 else
                                     result = string.Format("Database error: update not saved");
                             }
@@ -280,12 +288,14 @@ namespace WebMap
                             {
                                 Trace.WriteLine(ex.Message);
                                 log.Error = ex.Message;
+                                result = ex.Message;
                             }
                             finally
                             {
                                 log.Result = result;
                                 log.Save(mapConnection);
                                 mapConnection.Close();
+                                
                             }
                             return result;
                         }

@@ -53,8 +53,9 @@ namespace LocationService
         //double lastLatitude, lastLongitude;
         Location lastLocation;
         List<Location> savedLocations;
-        const int maxLocations = 10;
+        const int maxLocations = 200;
         bool testfunc = true;
+        int skip = 0, skips = 0;
 
         public object CrossGeolocator { get; private set; }
 
@@ -97,7 +98,7 @@ namespace LocationService
             //TTS = Plugin.TextToSpeech.CrossTextToSpeech.Current;
             locator.DesiredAccuracy = 50;
             //locator.StartListeningAsync(12000, 0);
-            locator.StartListeningAsync(120000, 0);
+            locator.StartListeningAsync(60000, 0);
 
 
             locator.PositionChanged += Locator_PositionChanged;
@@ -137,7 +138,7 @@ namespace LocationService
                 double diffLat = position.Latitude - lastLocation.Latitude;
 
                 double diffLon = position.Longitude - lastLocation.Longitude;
-                double distance = Math.Sqrt(Math.Abs(diffLat * diffLat - diffLon * diffLon));
+                double distance = Math.Sqrt(Math.Abs(diffLat * diffLat + diffLon * diffLon));
 
                 if (distance < 0.001)
                 {
@@ -155,6 +156,7 @@ namespace LocationService
                 thisLocation.time = DateTime.Now;
                 thisLocation.same = (positionCount >= 2);
                 positionCount = 0;
+
 
 
                 try
@@ -182,6 +184,8 @@ namespace LocationService
                             }
                             builder.SetContentTitle(string.Format("{0} stored locations saved", savedLocations.Count));
                             savedLocations.Clear();
+                            skips = 0;
+                            skip = 0;
                         }
                         
                         builder.SetContentText("Posted to Web at " + DateTime.Now.ToShortTimeString());
@@ -192,6 +196,11 @@ namespace LocationService
                 catch (Exception ex)
                 {
                     // cannot get web access at present.
+                    // need to temporarily store some locations
+
+                    // may need to miss out some values if storage has been exceeded        
+                    while (skip > 0)
+                    { --skip; return; }
 
                     if (savedLocations.Count < maxLocations)
                     {
@@ -213,6 +222,10 @@ namespace LocationService
                             {
                                 savedLocations.RemoveAt(i);
                             }
+                            if (skips == 0)
+                                skips = 2;
+                            else
+                                skips = skips + skips;
                         }
                         builder.SetContentTitle("Shortened list @" + DateTime.Now.ToShortTimeString());
                         builder.SetContentText(savedLocations.Count + " positions stored");
