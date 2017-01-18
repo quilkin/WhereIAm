@@ -98,7 +98,7 @@ namespace LocationService
             //TTS = Plugin.TextToSpeech.CrossTextToSpeech.Current;
             locator.DesiredAccuracy = 50;
             //locator.StartListeningAsync(12000, 0);
-            locator.StartListeningAsync(60000, 0);
+            locator.StartListeningAsync(120000, 0);
 
 
             locator.PositionChanged += Locator_PositionChanged;
@@ -184,8 +184,8 @@ namespace LocationService
                             }
                             builder.SetContentTitle(string.Format("{0} stored locations saved", savedLocations.Count));
                             savedLocations.Clear();
-                            skips = 0;
-                            skip = 0;
+                            //skips = 0;
+                            //skip = 0;
                         }
                         
                         builder.SetContentText("Posted to Web at " + DateTime.Now.ToShortTimeString());
@@ -199,8 +199,8 @@ namespace LocationService
                     // need to temporarily store some locations
 
                     // may need to miss out some values if storage has been exceeded        
-                    while (skip > 0)
-                    { --skip; return; }
+                    //while (skip > 0)
+                    //{ --skip; return; }
 
                     if (savedLocations.Count < maxLocations)
                     {
@@ -222,10 +222,10 @@ namespace LocationService
                             {
                                 savedLocations.RemoveAt(i);
                             }
-                            if (skips == 0)
-                                skips = 2;
-                            else
-                                skips = skips + skips;
+                            //if (skips == 0)
+                            //    skips = 2;
+                            //else
+                            //    skips = skips + skips;
                         }
                         builder.SetContentTitle("Shortened list @" + DateTime.Now.ToShortTimeString());
                         builder.SetContentText(savedLocations.Count + " positions stored");

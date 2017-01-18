@@ -199,6 +199,14 @@
     <Content Include="scripts\mousePos.js" />
     <Content Include="scripts\myMap.js" />
     <Content Include="scripts\platformOverrides.js" />
+    <Content Include="Weather\index.html" />
+    <Content Include="Weather\scripts\amchart.js" />
+    <Content Include="Weather\scripts\amcharts.js" />
+    <Content Include="Weather\scripts\weather.js" />
+    <Content Include="Weather\scripts\jquery-1.11.1.min.js" />
+    <Content Include="Weather\scripts\serial.js" />
+    <Content Include="Weather\scripts\timesdates.js" />
+    <Content Include="Weather\scripts\TTdata.js" />
     <Content Include="WebMap.svc" />
     <Content Include="Web.config">
       <SubType>

@@ -38,70 +38,46 @@ namespace WebMap
         }
     }
 
-    [DataContract]
-    public class Logdata
-    {
+    //[DataContract]
+    //public class WeatherData
+    //{
 
-        public static DateTime JSTimeToNetTime(long time)
-        {
-            DateTime t = new DateTime(1970, 1, 1);
-            return t.AddMilliseconds(time);
-        }
-        /// <summary>
-        /// keeping member names small to keep json stringifications smaller
-        /// </summary>
-        [DataMember]
-        public string S { get; set; }
-        [DataMember]
-        public int T { get; set; }
-        [DataMember]
-        public List<float> V { get; set; }
+    //    public static DateTime JSTimeToNetTime(long time)
+    //    {
+    //        DateTime t = new DateTime(1970, 1, 1);
+    //        return t.AddMilliseconds(time);
+    //    }
+    //    /// <summary>
+    //    /// keeping member names small to keep json stringifications smaller
+    //    /// </summary>
+    //    [DataMember]
+    //    public string S { get; set; }
+    //    [DataMember]
+    //    public int T { get; set; }
+    //    [DataMember]
+    //    public int  V { get; set; }
 
-        public int ID { get; set; }
 
-        public Logdata()
-        {
-            S = string.Empty;
-            T = 0;
-            V = new List<float>();
-        }
-        public Logdata(string id, DateTime dt, List<float> vals)
-        {
-            S = id;
-            T = (int)TimeSpan.FromTicks(dt.Ticks).TotalMinutes;
-            V = vals;
-        }
-        public Logdata(int id, DateTime dt, List<float> vals)
-        {
-            ID = id;
-            T = (int)TimeSpan.FromTicks(dt.Ticks).TotalMinutes;
-            V = vals;
-        }
-        public Logdata(string id, int totalmins, List<float> vals)
-        {
-            S = id;
-            T = totalmins;
-            V= vals;
-        }
-        public Logdata(int totalmins, List<float> vals)
-        {
-            T = totalmins;
-            V = vals;
-        }
-        public Logdata(int id, int totalmins, List<float> vals)
-        {
-            ID = id;
-            T = totalmins;
-            V = vals;
-        }
+    //    public WeatherData()
+    //    {
+    //        S = string.Empty;
+    //        T = 0;
+    //        V = 0;
+    //    }
+    //    public WeatherData(string id, DateTime dt, List<float> vals)
+    //    {
+    //        S = id;
+    //        T = (int)TimeSpan.FromTicks(dt.Ticks).TotalMinutes;
+    //        V = vals;
+    //    }
 
-    }
+    //}
 
     [DataContract]
     public class DataRequest
     {
-        [DataMember]
-        public List<int> IDlist { get; set; }
+        //[DataMember]
+        //public List<int> IDlist { get; set; }
         [DataMember]
         public int From{ get; set; }
         [DataMember]
@@ -109,13 +85,13 @@ namespace WebMap
 
         public DataRequest()
         {
-            IDlist = new List<int>(); 
+            //IDlist = new List<int>(); 
             From = 0;
             To =  0;
         }
-        public DataRequest(List<int> idlist, int from, int to)
+        public DataRequest( int from, int to)
         {
-            IDlist = idlist;
+           // IDlist = idlist;
             From = from;
             To = to;
         }
@@ -212,6 +188,43 @@ namespace WebMap
 
     }
 
+    [DataContract]
+    public class WeatherData
+    {
+        [DataMember(Name = "indoorT")]
+        public double IndoorTemp { get; set; }
+        [DataMember(Name = "shadeT")]
+        public double OutdoorTemp { get; set; }
+        [DataMember(Name = "hum")]
+        public int Humidity { get; set; }
+        [DataMember(Name = "rain")]
+        public int Rainfall { get; set; }
+        [DataMember(Name = "winddir")]
+        public int Direction { get; set; }
+        [DataMember(Name = "windspeed")]
+        public int Speed { get; set; }
+        [DataMember(Name = "recorded_at")]
+        public String Time { get; set; }
+        [DataMember(Name = "owner")]
+        public int Owner { get; set; }
+
+        public static DateTime JSTimeToNetTime(long time)
+        {
+            DateTime t = new DateTime(1970, 1, 1);
+            return t.AddMilliseconds(time);
+        }
+        public WeatherData(double shadeT, double indoorT, int hum, int rain, int dir, int speed, String t)
+        {
+            IndoorTemp = indoorT;
+            OutdoorTemp = shadeT;
+            Humidity = hum;
+            Rainfall = rain;
+            Direction = dir;
+            Speed = speed;
+            Time = t;
+        }
+
+    }
     public class LogEntry
     {
         public string IP { get; set; }
