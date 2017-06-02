@@ -66,6 +66,7 @@ namespace WebMap
         }
 
 
+
         /// <summary>
         /// Log in to the system
         /// </summary>
@@ -158,9 +159,20 @@ namespace WebMap
             return login;
 
         }
+        //public IEnumerable<Location> GetLocationsGet()
+        //{
+        //    return GetLocations(1);
+        //}
 
-
-
+        // these needed to get round OPTIONS bug in IIS returning 405 error
+        public Login LoginOptions(Login login)
+        {
+            return null;
+        }
+        public IEnumerable<Location> GetLocationsOptions(int userID)
+        {
+            return null;
+        }
         public IEnumerable<Location> GetLocations(int userID)
         {
             int howMany = 300;
@@ -182,6 +194,7 @@ namespace WebMap
             }
             catch (Exception ex)
             {
+
                 Trace.WriteLine(ex.Message);
                 log.Result = ex.Message;
                 log.Save(mapConnection);
@@ -221,11 +234,13 @@ namespace WebMap
         /// <param name="from">start of data reqd</param>
         /// <param name="to">end of data reqd</param>
         /// <returns></returns>
-        public IEnumerable<WeatherData> GetWeather(DataRequest req)
+        //public IEnumerable<WeatherData> GetWeather(DataRequest req)
+        public string GetWeather(int start)
         {
+            DataRequest req = new DataRequest(start, start + 10000);
             LogEntry log = new LogEntry(getIP(), "GetWeather", req.ToString());
 
-
+            string result = "";
             weatherdata = new List<WeatherData>();
 
             try
@@ -235,16 +250,17 @@ namespace WebMap
             }
             catch (Exception ex)
             {
+                result = ex.Message;
                 Trace.WriteLine(ex.Message);
                 log.Result = ex.Message;
                 log.Save(mapConnection);
                 mapConnection.Close();
-                return null;
+                return result;
 
             }
 
 
-        string query = string.Format("SELECT * FROM weather  WHERE weather.time >= '{0}' and weather.time <= '{1}' ORDER BY logdata.time",
+        string query = string.Format("SELECT * FROM weather  WHERE weather.time >= '{0}' and weather.time <= '{1}' ORDER BY weather.time",
                 req.From, req.To);
             using (SqlDataAdapter loginAdapter = new SqlDataAdapter(query, mapConnection))
             {
@@ -264,10 +280,11 @@ namespace WebMap
                     weatherdata.Add(new WeatherData(shadeT, indoorT, hum, rain, winddir, windspeed, time.ToString()));
                 };
             }
-            log.Result = locations.Count.ToString() + " weather records";
+            result = log.Result = locations.Count.ToString() + " weather records";
             log.Save(mapConnection);
             mapConnection.Close();
-            return weatherdata;
+            //return weatherdata;
+            return result;
         }
 
         public string SaveLocation(Location loc)

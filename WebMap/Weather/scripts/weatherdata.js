@@ -54,7 +54,7 @@ var bleData = (function ($) {
 
     },
     webRequestFailed = function(handle, status, error) {
-        popup.Alert("Error with web request: " + error);
+        alert("Error with web request: " + error);
         if ($jsonBtn !== null) {
             $jsonBtn.button('reset');
         }
@@ -80,7 +80,8 @@ var bleData = (function ($) {
             // get data until *end of* selected date
             when2 = bleTime.addDays(endDate, 1);
 
-        query = new bleData.requestRecords( Math.round(when1.valueOf() / 60000), Math.round(when2.valueOf() / 60000));
+        //     query = new bleData.requestRecords( Math.round(when1.valueOf() / 60000), Math.round(when2.valueOf() / 60000));
+        query = new bleData.requestRecords(1000000);
         bleData.myJson("GetWeather", "POST", query, function (response) {
             if (response.length === 0) {
                 popup.Alert("No data found!");
@@ -173,46 +174,6 @@ var bleData = (function ($) {
     };
 
 
-    bleData.DisplayValues = function () {
-        $("#tableName").html("Preparing table (" + dispValues.length + " records...)");
-        // put a timeout here to enable the new html to be displayed at the correct time....
-        window.setTimeout(function () {
-            var d, v, val, vals,
-                row,
-                titles,
-                valStr,
-                dataArray = [];
-            //var device = "";
-            
-            $.each(dispValues, function (index, logdata) {
-                row = [];
-                d = new Date(logdata.T * 60000);
-                row.push(bleTime.dateString(d));
-                row.push(bleTime.timeString(d));
-                vals = logdata.V.length;
-                for (v = 0; v < vals; v++) {
-                    val = logdata.V[v];
-                    if (val > -270) {
-                        row.push(val);
-                    }
-                    else {
-                        // missing data?
-                        row.push('****');
-                    }
-                }
-                dataArray.push(row);
-            });
-            //titles = [{ "sTitle": "Date" }, { "sTitle": "Time" }];
-            //$.each(bleSensors.DisplayedSensors(), function (index, sensor) {
-            //    valStr = '(' + (index + 1) + ')';
-            //    titles.push({ "sTitle": valStr });
-            //});
-            //bleTable('#data', null, dataArray, bleApp.tableHeight(), titles, null);
-            //$("#tableName").html(bleSensors.DisplayedSensorNames());
-        }, 100);
-    };
-
-
     bleData.CreateChart = function (div) {
         var chartData = [],
             d, v, val, vals, valname, dataPoint;
@@ -220,7 +181,7 @@ var bleData = (function ($) {
         $("#chartName").html("Preparing chart (" + dispValues.length + " records...)");
         // put a timeout here to enable the new html to be displayed at the correct time....
         window.setTimeout(function () {
-            $.each(dispValues, function (index,logdata) {
+            $.each(dispValues, function (index,weatherdata) {
 
                 if (logdata.V < -270) {
                     // badData = true;

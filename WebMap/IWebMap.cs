@@ -14,9 +14,14 @@ namespace WebMap
         Login Login(Login login);
 
         [OperationContract]
+        [WebInvoke(Method = "OPTIONS", UriTemplate = "/Login", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        Login LoginOptions(Login login);
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/GetWeather", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         [ServiceKnownType(typeof(List<WeatherData>))]
-        IEnumerable<WeatherData> GetWeather(DataRequest query);
+        //IEnumerable<WeatherData> GetWeather(DataRequest query);
+        string GetWeather(int query);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/SaveLocation", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
@@ -28,8 +33,20 @@ namespace WebMap
         IEnumerable<Location> GetLocations(int userID);
 
         [OperationContract]
+        [WebInvoke(Method = "OPTIONS", UriTemplate = "/GetLocations", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        [ServiceKnownType(typeof(List<Location>))]
+        IEnumerable<Location> GetLocationsOptions(int userID);
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/SaveWeather", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         string SaveWeather(WeatherData weather);
+
+
+        //[OperationContract]
+        //[WebInvoke(Method = "GET", UriTemplate = "/GetLocationsGet", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        //[ServiceKnownType(typeof(List<Location>))]
+        //IEnumerable<Location> GetLocationsGet();
     }
+
 
 }

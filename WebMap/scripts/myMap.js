@@ -10,14 +10,16 @@ var MapData = (function ($) {
     
 
     function urlBase() {
-        return "http://localhost/WebMap/WebMap.svc/";
+     return "http://localhost/WebMap/WebMap.svc/";
       //return "http://www.quilkin.co.uk/WebMap.svc/";
 
     }
-    function webRequestFailed(handle, status, error) {
-        alert("Web Error: " + error);
+    function webRequestFailed(xhr) {
+            alert('Web Error: ' + xhr.status + ' Status Text: ' + xhr.statusText + ' ' + xhr.responseText);
+        }
 
-    }
+        //alert("Web Error: " + error + " " + status);
+
 
     MapData.json = function (url, type, data, successfunc) {
         var thisurl = urlBase() + url;
@@ -35,6 +37,12 @@ var MapData = (function ($) {
 
             $.ajax({
                 type: type,
+                //transformRequest: function (obj) {
+                //    var str = [];
+                //    for (var p in obj)
+                //        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                //    return str.join("&");
+                //},
                 data: dataJson,
                 url: thisurl,
                 contentType: "application/json; charset=utf-8",
@@ -179,6 +187,16 @@ var myMap = (function ($) {
         p = $("#password").val();
         //userRole = 0;
 
+
+        //MapData.json('GetLocationsGet', "GET", null, function (locs) {
+        //    alert("Got locations: " + locs.length)
+        //    var locations = [];
+        //    $.each(locs, function (index, loc) {
+        //        if (loc.latitude > 0)
+        //            locations += loc;
+        //    })
+        //}, true, null);
+
         if (u !== '' && p !== '') {
             creds = { name: u, pw: p, email: "", code: 0 };
             MapData.json('Login', "POST", creds, function (res) {
@@ -208,6 +226,15 @@ var myMap = (function ($) {
             alert("You must enter a username and password");
             $("#login").removeAttr("disabled");
         }
+
+        //userID =1;
+
+        //createMap(userID,true);
+        //// refresh map every 5 minutes
+        //setTimeout(function () {
+        //    updateMap(userID,false);
+        //}, 300000);
+
         return false;
     })
 
@@ -218,6 +245,7 @@ var myMap = (function ($) {
             tempID = -tempID;
         }
         MapData.json('GetLocations', "POST", tempID, function (locs) {
+        //MapData.json('GetLocationsGet', "GET", null, function (locs) {
 
             // first point will be the latest one recorded, use this to centre the map
             location = locs[0];

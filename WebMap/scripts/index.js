@@ -24,7 +24,8 @@
 
         //var loc = { latitude: 47.640068, longitude: -122.129858 };
         //MapData.json('SaveLocation', "POST", loc, function () { }, true, null);
-        //MapData.json('GetLocations', "POST", null, function (locs) {
+        //MapData.json('GetLocationsGet', "GET", null, function (locs) {
+        //    alert("Got locations: " + locs.length)
         //    var locations = [];
         //    $.each(locs, function (index, loc) {
         //        if (loc.latitude > 0)
@@ -36,6 +37,19 @@
         //setTimeout(function () {
         //    window.location.reload(1);
         //}, 300000);
+
+        // to prevent Safari not working with localStorage
+        if (typeof localStorage === 'object') {
+
+            try {
+                localStorage.setItem('localStorage', 1);
+                localStorage.removeItem('localStorage');
+
+            } catch (e) {
+                Storage.prototype._setItem = Storage.prototype.setItem;
+                Storage.prototype.setItem = function () { };
+            }
+        }
     });
 
     function onPause() {
