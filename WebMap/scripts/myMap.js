@@ -10,8 +10,9 @@ var MapData = (function ($) {
     
 
     function urlBase() {
-     return "http://localhost/WebMap/WebMap.svc/";
-      //return "http://www.quilkin.co.uk/WebMap.svc/";
+     return "https://localhost/WebMap/WebMap.svc/";
+      //  return "https://www.quilkin.co.uk/WebMap.svc/";
+     
 
     }
     function webRequestFailed(xhr) {
@@ -37,12 +38,6 @@ var MapData = (function ($) {
 
             $.ajax({
                 type: type,
-                //transformRequest: function (obj) {
-                //    var str = [];
-                //    for (var p in obj)
-                //        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                //    return str.join("&");
-                //},
                 data: dataJson,
                 url: thisurl,
                 contentType: "application/json; charset=utf-8",

@@ -149,17 +149,19 @@
     <Content Include="res\icons\icon.png" />
     <Content Include="res\images\Sorting icons.psd" />
     <Content Include="JSLintNet.json" />
-    <Content Include="packages.config" />
-    <Content Include="Web-a.config">
+    <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="WebMap_TemporaryKey.pfx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <Content Include="WebMap_TemporaryKey.pfx" />
     <None Include="_references.js" />
   </ItemGroup>
   <ItemGroup>
@@ -244,9 +246,6 @@
     <Content Include="Weather\scripts\serial.js" />
     <Content Include="Weather\scripts\timesdates.js" />
     <Content Include="Weather\scripts\weatherdata.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="WebMap.svc" />
   </ItemGroup>
   <ItemGroup>

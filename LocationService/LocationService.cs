@@ -16,6 +16,7 @@ namespace LocationService
         public DateTime time;
         public bool same;
         public static int owner;
+
     }
 
     [BroadcastReceiver]
@@ -46,7 +47,7 @@ namespace LocationService
         NotificationManager notificationManager;
         Notification notification;
         int notificationID = 0;
-        Android.Media.MediaPlayer _player;
+        //Android.Media.MediaPlayer _player;
         Plugin.Geolocator.Abstractions.IGeolocator locator;
         //Plugin.TextToSpeech.Abstractions.ITextToSpeech TTS;
         int positionCount = 0;
@@ -54,8 +55,8 @@ namespace LocationService
         Location lastLocation;
         List<Location> savedLocations;
         const int maxLocations = 200;
-        bool testfunc = true;
-        int skip = 0, skips = 0;
+        //bool testfunc = true;
+        //int skip = 0, skips = 0;
 
         public object CrossGeolocator { get; private set; }
 
@@ -76,7 +77,14 @@ namespace LocationService
             //PendingIntent pendingIntent =
             //    PendingIntent.GetActivity(this, pendingIntentId, intent, PendingIntentFlags.OneShot);
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(this);
-            Location.owner = prefs.GetInt("owner", 0);
+            try
+            {
+                Location.owner = prefs.GetInt("owner", 0);
+            }
+            catch
+            {
+                Location.owner = 0;
+            }
 
             builder = new Notification.Builder(this)
                 .SetSmallIcon(Resource.Drawable.icon)//.setTicker(text).setWhen(time)
@@ -161,6 +169,9 @@ namespace LocationService
 
                 try
                 {
+                    ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
                     using (WebClient client = new WebClient())
                     {
                         string json = string.Format("{{\"latitude\":{0},\"longitude\":{1},\"recorded_at\":\"{2}\",\"owner\":{3}}}", 

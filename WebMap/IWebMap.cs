@@ -23,9 +23,9 @@ namespace WebMap
         //IEnumerable<WeatherData> GetWeather(DataRequest query);
         string GetWeather(int query);
 
-        [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "/SaveLocation", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        string SaveLocation(Location loc);
+        //[OperationContract]
+        //[WebInvoke(Method = "POST", UriTemplate = "/SaveLocation", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        //string SaveLocation(Location loc);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/GetLocations", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
@@ -41,12 +41,17 @@ namespace WebMap
         [WebInvoke(Method = "POST", UriTemplate = "/SaveWeather", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         string SaveWeather(WeatherData weather);
 
-
-        //[OperationContract]
-        //[WebInvoke(Method = "GET", UriTemplate = "/GetLocationsGet", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        //[ServiceKnownType(typeof(List<Location>))]
-        //IEnumerable<Location> GetLocationsGet();
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "/SaveLocation", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        string SaveLocation(Location loc);
     }
 
 
+    //[ServiceContract]
+    //public interface IWebPhone
+    //{
+    //    [OperationContract]
+    //    [WebInvoke(Method = "POST", UriTemplate = "/SaveLocation", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+    //    string SaveLocation(Location loc);
+    //}
 }

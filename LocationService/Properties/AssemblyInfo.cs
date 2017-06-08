@@ -5,12 +5,12 @@ using Android.App;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("SimpleService")]
+[assembly: AssemblyTitle("LocationService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("mike_bluestein")]
+[assembly: AssemblyCopyright("quilkin")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
