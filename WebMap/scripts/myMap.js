@@ -172,7 +172,12 @@ var myMap = (function ($) {
         createCorner('center', 'right');
 
     }
-
+    $("#newpw").click(function() {
+        //alert("Please ensure your phone has web access, then login with password 'NewPassword'");
+        alert("Please ensure your phone has web access");
+        $("#password").val('NewPassword');
+        $("#login").click();
+    })
 
     $("#login").click(function() {
         var u, p, creds, form = $("#login");
@@ -183,19 +188,14 @@ var myMap = (function ($) {
         //userRole = 0;
 
 
-        //MapData.json('GetLocationsGet', "GET", null, function (locs) {
-        //    alert("Got locations: " + locs.length)
-        //    var locations = [];
-        //    $.each(locs, function (index, loc) {
-        //        if (loc.latitude > 0)
-        //            locations += loc;
-        //    })
-        //}, true, null);
-
         if (u !== '' && p !== '') {
             creds = { name: u, pw: p, email: "", code: 0 };
             MapData.json('Login', "POST", creds, function (res) {
-                if (res.pw == "" && res.name=="") {
+                if (res.pw == "NewPassword") {
+                    alert("See your phone for more instructions, which should arrive within 10 minutes");
+
+                }
+                else if (res.pw == "" && res.name=="") {
                     alert("Invalid username");
                 }
                 else if (res.pw == "") {
@@ -209,7 +209,7 @@ var myMap = (function ($) {
 
                     createMap(userID,true);
                     // refresh map every 5 minutes
-                    setTimeout(function () {
+                    setInterval(function () {
                         updateMap(userID,false);
                     }, 300000);
  

@@ -102,6 +102,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Camper\scripts\camper.js" />
+    <Content Include="Camper\index.html" />
+    <Content Include="Camper\scripts\jquery-1.11.1.min.js" />
     <Content Include="config.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -282,10 +285,10 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>60080</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost/WebMap</IISUrl>
+          <IISUrl>http://localhost/WebMap</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>http://quilkin.co.uk</CustomServerUrl>
+          <CustomServerUrl>http://timetrials.org.uk</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
           <servers defaultServer="">
             <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:60080/" workingDir="" />
