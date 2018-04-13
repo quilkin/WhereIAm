@@ -116,6 +116,13 @@
     <Content Include="css\leaflet.routing.mapzen.css" />
     <Content Include="css\my.css" />
     <Content Include="Global.asax" />
+    <Content Include="gpxmaps\amcharts.js" />
+    <Content Include="gpxmaps\dashboard.css" />
+    <Content Include="gpxmaps\elev.js" />
+    <Content Include="gpxmaps\gpx.js" />
+    <Content Include="gpxmaps\gpxmap.js" />
+    <Content Include="gpxmaps\index.html" />
+    <Content Include="gpxmaps\serial.js" />
     <Content Include="images\crosshair.png" />
     <Content Include="scripts\dialog.js" />
     <Content Include="scripts\images\layers-2x.png" />
@@ -159,6 +166,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="WebMap_TemporaryKey.pfx" />
+    <Content Include="gpxmaps\Stithians_Int.gpx" />
+    <Content Include="gpxmaps\demo.gpx" />
+    <Content Include="gpxmaps\bmmr40.gpx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

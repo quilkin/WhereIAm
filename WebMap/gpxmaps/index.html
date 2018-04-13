@@ -1,0 +1,235 @@
+﻿<!doctype html>
+
+<!--
+  Copyright (C) 2011-2012 Pavel Shramov
+  Copyright (C) 2013 Maxime Petazzoni <maxime.petazzoni@bulix.org>
+  All Rights Reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  - Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+
+  - Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+-->
+
+    
+    <html>
+    <head>
+        <title>leaflet-gpx demo</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
+        <style type="text/css">
+            body {
+                width: 950px;
+                margin: 0 auto;
+            }
+
+            .gpx {
+                border: 2px #aaa solid;
+                border-radius: 5px;
+                box-shadow: 0 0 3px 3px #ccc;
+                width: 600px;
+                margin: 1em auto;
+
+            }
+
+                .gpx header {
+                    padding: 0.5em;
+                }
+
+                .gpx h3 {
+                    margin: 0;
+                    padding: 0;
+                    font-weight: bold;
+                }
+
+                .gpx .start {
+                    font-size: smaller;
+                    color: #444;
+                }
+
+                .gpx .map {
+                    position: relative;
+                     z-index: 1;
+                    border: 1px #888 solid;
+                    border-left: none;
+                    border-right: none;
+                    width: 600px;
+                    height: 500px;
+                    margin: 0;
+                }
+                 .gpx .elev {
+                    border: 1px #888 solid;
+                    border-left: none;
+                    border-right: none;
+                    width: 600px;
+                    height: 100px;
+                    margin: 0;
+                }
+
+                .gpx footer {
+                    background: #f0f0f0;
+                    padding: 0.5em;
+                }
+
+                .gpx ul.info {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    font-size: smaller;
+                }
+
+                .gpx ul.info li {
+                    color: #666;
+                    padding: 2px;
+                    display: inline;
+                }
+
+                .gpx ul.info li span {
+                    color: black;
+                }
+
+
+                .show {display:block;}
+                .panel1 {
+                     min-width: 200px;
+                    width: 250px;
+                    float: left;
+                    margin-top: 15px;
+
+}
+                .panel2 {
+                    min-width: 600px;
+                    width: 650px;
+                    float: right;
+
+}
+            #routes {
+                font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+                font-size:smaller;
+                border-collapse: collapse;
+                width: 90%;
+            }
+
+            #routes td, #routes th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            #routes tr:nth-child(even){background-color: #f2f2f2;}
+
+            #routes tr:hover {background-color: #ddd;}
+
+            #routes th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="panel1">
+            <!--<button onclick="myFunction()" class="dropbtn">Leisure Rides from Truro</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a id="stithians" data-gpx-source="https://quilkin.co.uk/gpxmaps/Stithians_Int.gpx">Stithians</a>
+                <a id="portreath" data-gpx-source="https://quilkin.co.uk/gpxmaps/portreath.gpx">Portreath</a>
+                <a id="bmmr40" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr40.gpx">BMMR 40 km (easy)</a>
+            </div>-->
+            <table id="routes">
+                <tr>       <th>Leisure Routes </th>   </tr>
+                <tr>
+                    <td>
+                        <a id="portreath" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr40.gpx">Portreath</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a id="bmmr40" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr40.gpx">BMMR 40 km route (easy)</a>
+                    </td>
+                </tr>
+                <tr>        <th>Intermediate Routes </th>    </tr>
+                <tr>
+                    <td>
+                        <a id="stithians" data-gpx-source="https://quilkin.co.uk/gpxmaps/Stithians_Int.gpx">Stithians</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a id="bmmr55" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr55.gpx">BMMR 55km route</a>
+                    </td>
+                </tr>
+                <tr>        <th>Longer Routes </th>    </tr>
+                <tr>
+                    <td>
+                        <a id="LandsEnd" data-gpx-source="https://quilkin.co.uk/gpxmaps/NearlyLandsEnd.gpx">Nearly Land's End</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!--<div class="panel2">-->
+            <div id="demo" class="panel2 gpx" data-map-target="demo-map" data-elev-target="demo-elev">
+                <header>
+                    <h3>Choose a route....</h3>
+                    <span class="start"></span>
+                </header>
+
+                <article>
+                    <div class="map" id="demo-map"></div>
+                </article>
+
+                <article>
+                    <div class="elev" id="demo-elev"></div>
+                </article>
+
+                <footer>
+                    <ul class="info">
+                        <li>Distance:&nbsp;<span class="distance"></span>&nbsp;km</li>
+                        <!--&mdash;
+                    <li>Duration:&nbsp;<span class="duration"></span></li>
+                    &mdash;
+                    <li>Pace:&nbsp;<span class="pace"></span>/mi</li>
+                    &mdash;
+                    <li>Avg&nbsp;HR:&nbsp;<span class="avghr"></span>&nbsp;bpm</li>-->
+                        &mdash;
+                        <li>
+                            Elevation:&nbsp;+<span class="elevation-gain"></span>&nbsp;m,
+                            -<span class="elevation-loss"></span>&nbsp;m
+                            (net:&nbsp;<span class="elevation-net"></span>&nbsp;m)
+                        </li>
+                    </ul>
+                </footer>
+            </div>
+        <!--</div>-->
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+        <!--<script src="https://rawgithub.com/mpetazzoni/leaflet-gpx/master/gpx.js"></script>-->
+        <script src="amcharts.js"></script>
+        <script src="serial.js"></script>
+        <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+        <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+        <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+        <script src="elev.js"></script>
+        <script src="gpx.js"></script>
+        <script src="gpxmap.js"></script>
+
+</body>
+</html>
+    

@@ -22,6 +22,7 @@ function showTempChart() {
         "graphs": [
             {
                 "id": "g1",
+                "connect": false,
                 "fillAlphas": 0.1,
                 "valueField": "shadeT",
                 "lineColor": "ffbcc6",
@@ -29,6 +30,7 @@ function showTempChart() {
             },
             {
                 "id": "g2",
+                "connect": false,
                 "fillAlphas": 0.1,
                 "valueField": "vanT",
                 "lineColor": "#FF0026",
@@ -36,6 +38,7 @@ function showTempChart() {
             },
             {
                 "id": "g3",
+                "connect": false,
                 "fillAlphas": 0.1,
                 "valueField": "fridgeT",
                 "lineColor": "#3c66fc",
@@ -61,7 +64,7 @@ function showTempChart() {
         },
         "categoryField": "time",
         "categoryAxis": {
-            "minPeriod": "mm",
+            "minPeriod": "10mm",
             "parseDates": true
         },
         "export": {
@@ -93,6 +96,7 @@ function showSolarChart() {
         "graphs": [
             {
                 "id": "g4",
+                "connect": false,
                 "valueAxis": "v1",
                 "fillAlphas": 0.4,
                 "valueField": "battV",
@@ -100,6 +104,7 @@ function showSolarChart() {
             },
             {
                 "id": "g5",
+                "connect": false,
                 "valueAxis": "v1",
                 "fillAlphas": 0.4,
                 "valueField": "panelV",
@@ -107,6 +112,7 @@ function showSolarChart() {
             },
             {
                 "id": "g6",
+                "connect": false,
                 "valueAxis": "v2",
                 "fillAlphas": 0.4,
                 "valueField": "panelP",
@@ -114,6 +120,7 @@ function showSolarChart() {
             },
             {
                 "id": "g7",
+                "connect": false,
                 "valueAxis": "v2",
                 "fillAlphas": 0.4,
                 "valueField": "loadC",
@@ -139,7 +146,7 @@ function showSolarChart() {
         },
         "categoryField": "time",
         "categoryAxis": {
-            "minPeriod": "mm",
+            "minPeriod": "10mm",
             "parseDates": true
         },
         "export": {
@@ -152,9 +159,9 @@ function showSolarChart() {
 
 function urlBase() {
 
-    // return "http://www.timetrials.org.uk/Service1.svc/";
-    return "http://localhost/WebMap/WebMap.svc/";
-
+    //return "http://www.timetrials.org.uk/Service1.svc/";
+    //return "http://localhost/WebMap/WebMap.svc/";
+    return "../Service1.svc/";
 
 }
 
@@ -193,7 +200,7 @@ function getWebData() {
                     // load watts = load current * battery volts
                     dispValues[index]['loadC'] = Math.round(dispValues[index]['loadC'] / 1000 * dispValues[index]['battV']);
                 }
-                else if (index < len)
+                else if (index < len-1)
                 {
                     // no valid readings, copy last reading
                     dispValues[index]['battV'] = dispValues[index+1]['battV'];
@@ -221,10 +228,11 @@ function myJson(url, type, data, successfunc, async) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         async: async,
-        success: function (response) { webRequestSuccess(successfunc, response); },
+        success: function (response)
+            { webRequestSuccess(successfunc, response); },
         error: webRequestFailed
 
-    });
+        })
 }
 
 

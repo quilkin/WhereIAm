@@ -528,9 +528,24 @@ namespace WebMap
             LogEntry log = new LogEntry(getIP(), "SaveCamper", new JavaScriptSerializer().Serialize(w));
             try
             {
-                // datalogger doesn't know real time; if sequence nuber is > 0 then calculate actual time of records
-                int missingSeconds = w.Sequence * w.Period;
-                DateTime recordTime = DateTime.Now.AddSeconds(-missingSeconds);
+                DateTime recordTime;
+                if (w.Sequence < 1000000) { 
+                    // datalogger doesn't know real time; if sequence nuber is > 0 then calculate actual time of records
+                    int missingSeconds = w.Sequence * w.Period;
+                    recordTime = DateTime.Now.AddSeconds(-missingSeconds);
+                }
+                else
+                {
+                    // w.sequence has realtime in minutes from 01.01.1970
+                    double minutes = (double)w.Sequence;
+                    recordTime = new DateTime(1970, 1, 1);
+                    recordTime = recordTime.AddMinutes(minutes);
+                    if (recordTime.IsDaylightSavingTime())
+                    {
+                        recordTime = recordTime.AddMinutes(60);
+
+                    }
+                }
                 string T = TimeString(recordTime);
  
                 string query = string.Format("insert into camper (shadeT,vanT,fridgeT,battV,panelV,panelP,loadC,yield,maxP,time) values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')",
@@ -553,7 +568,7 @@ namespace WebMap
                 if (successRows == 1)
                     result = string.Format("Data saved OK at {0} ", DateTime.Now);
                 else
-                    result = string.Format("Database error: Weather not saved");
+                    result = string.Format("Database error: camper not saved");
 
             }
 
