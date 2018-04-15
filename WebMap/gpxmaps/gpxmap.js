@@ -1,36 +1,18 @@
-﻿/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
-
-// Close the dropdown if the user clicks outside of it
-window.onclick = function (event) {
-    if (!event.target.matches('.dropbtn')) {
-
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
-}
+﻿///* When the user clicks on the button, 
 
 var map;
 
-function display_gpx(elt) {
-    if (!elt) return;
+function display_gpx(url) {
+    if (!url) return;
 
-    var url = elt.getAttribute('data-gpx-source');
+    //var url = elt.getAttribute('data-gpx-source');
     var mapid = "demo-map";
     var elevid = "demo-elev";
     var demo = document.getElementById('demo');
 
 
     if (!url || !mapid) return;
+    _t('h3').textContent = "please wait...";
 
     function _t(t) { return demo.getElementsByTagName(t)[0]; }
     function _c(c) { return demo.getElementsByClassName(c)[0]; }
@@ -71,6 +53,8 @@ function display_gpx(elt) {
         _c('elevation-loss').textContent = gpx.get_elevation_loss().toFixed(0);
         _c('elevation-net').textContent = (gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0);
 
+        //drawProfile1("demo-elev", elev_data);
+
         // convert array to json for profile graph
         var i, n = elev_data.length;
         var json_elev = new Array();
@@ -89,18 +73,71 @@ function height(dist_t, height_t) {
     this.Height = height_t;
 }
 
-document.getElementById('stithians').onclick = function () {
-    display_gpx(document.getElementById('stithians'));
-};
-document.getElementById('bmmr40').onclick = function () {
-    display_gpx(document.getElementById('bmmr40'));
-};
-document.getElementById('bmmr55').onclick = function () {
-    display_gpx(document.getElementById('bmmr55'));
-};
-document.getElementById('LandsEnd').onclick = function () {
-    display_gpx(document.getElementById('LandsEnd'));
-};
+
+var routeTable, r, route, row,  destination, distance, type, url;
+
+var routes = [
+    ['Stithians Lake', 'Intermediate', '50km', "https://quilkin.co.uk/gpxmaps/Stithians_Int.gpx"],
+    ['BMMR short ', 'Leisure', '40km', "https://quilkin.co.uk/gpxmaps/bmmr40.gpx"],
+    ['BMMR medium', 'Intermediate', '55km'," https://quilkin.co.uk/gpxmaps/bmmr55.gpx"],
+    ["Nearly Land's End", 'Long', '130km', "https://quilkin.co.uk/gpxmaps/NearlyLandsEnd.gpx"],
+    
+]
+document.getElementById("newRoute").style.display = "none";
+routeTable = document.getElementById('routes');
+createRouteTable();
+
+function createRouteTable() {
+
+    routeTable.innerHTML = "";
+    for (r = 0; r < routes.length; r++) {
+        route = routes[r];
+        row = routeTable.insertRow(r);
+        destination = row.insertCell(0);
+        type = row.insertCell(1);
+        distance = row.insertCell(2);
+        destination.innerHTML = route[0];
+        type.innerHTML = route[1];
+        distance.innerHTML = route[2];
+        (function (url) {
+            row.addEventListener("click", function () { display_gpx(url); });
+        })(route[3]);
+
+    }
+    row = routeTable.insertRow(r);
+    destination = row.insertCell(0);
+    destination.colSpan = 3;
+    destination.innerHTML = "Add new route";
+    row.addEventListener("click", function () {
+       // location.href = "addRoute.html";
+        document.getElementById("newRoute").style.display = "block";
+
+    });
+
+}
+var newName, newGPX, newDist;
+function validateForm() {
+    newName = document.getElementById('name').value;
+    if (newName == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+    newDist = document.getElementById('dist').value;
+    if (newDist <= 0) {
+        alert("Distance must be greater than zero");
+        return false;
+    }
+    newGPX = document.getElementById("gpx").value;
+    if (newGPX == "") {
+        alert("GPX data must be provided");
+        return false;
+    }
+    document.getElementById("newRoute").style.display = "none";
+    routes.push([newName, ' ', newDist+'km', newGPX]);
+    createRouteTable();
+    return true;
+}
+
 
 
 

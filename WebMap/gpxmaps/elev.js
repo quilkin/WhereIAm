@@ -1,4 +1,36 @@
-﻿function drawProfile(elevid, elev_data) {
+﻿//function drawProfile1(elevid, elev_data) {
+
+
+//    var ctx = document.getElementById(elevid);
+//    var myChart = new Chart(ctx, {
+//        type: 'line',
+//        data: {
+           
+//            datasets: [{
+//                data: elev_data,
+//                lineTension: 0,
+//                backgroundColor: 'transparent',
+//                borderColor: '#007bff',
+//                borderWidth: 4,
+//                pointBackgroundColor: '#007bff'
+//            }]
+//        },
+//        options: {
+//            scales: {
+//                yAxes: [{
+//                    ticks: {
+//                        beginAtZero: false
+//                    }
+//                }]
+//            },
+//            legend: {
+//                display: false,
+//            }
+//        }
+//    });
+//}
+function drawProfile(elevid, elev_data) {
+
 
     var chart = AmCharts.makeChart(elevid, {
         "type": "serial",
@@ -8,7 +40,9 @@
         "valueAxes": [{
             "gridColor": "#FFFFFF",
             "gridAlpha": 0.2,
-            "title": "metres",     
+            "title": "metres",
+            "maximum": 300,
+            "minimum": 0,
             "dashLength": 0
         }],
         "gridAboveGraphs": true,

@@ -116,6 +116,7 @@
     <Content Include="css\leaflet.routing.mapzen.css" />
     <Content Include="css\my.css" />
     <Content Include="Global.asax" />
+    <Content Include="gpxmaps\addRoute.html" />
     <Content Include="gpxmaps\amcharts.js" />
     <Content Include="gpxmaps\dashboard.css" />
     <Content Include="gpxmaps\elev.js" />

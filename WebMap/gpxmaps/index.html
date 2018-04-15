@@ -120,6 +120,9 @@
 
 }
             #routes {
+                border: 2px #aaa solid;
+                border-radius: 5px;
+                box-shadow: 0 0 3px 3px #ccc;
                 font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
                 font-size:smaller;
                 border-collapse: collapse;
@@ -135,9 +138,21 @@
 
             #routes tr:hover {background-color: #ddd;}
 
-            #routes th {
+            #routesHeader th {
                 padding-top: 12px;
                 padding-bottom: 12px;
+                padding-right: 24px;
+                padding-left: 24px;
+                text-align: left;
+                font-style: italic;
+                background-color: #4CAF50;
+                color: white;
+            }
+             #routesTitle th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                padding-right: 24px;
+                padding-left: 24px;
                 text-align: left;
                 background-color: #4CAF50;
                 color: white;
@@ -146,48 +161,36 @@
     </head>
     <body>
         <div class="panel1">
-            <!--<button onclick="myFunction()" class="dropbtn">Leisure Rides from Truro</button>
-            <div id="myDropdown" class="dropdown-content">
-                <a id="stithians" data-gpx-source="https://quilkin.co.uk/gpxmaps/Stithians_Int.gpx">Stithians</a>
-                <a id="portreath" data-gpx-source="https://quilkin.co.uk/gpxmaps/portreath.gpx">Portreath</a>
-                <a id="bmmr40" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr40.gpx">BMMR 40 km (easy)</a>
-            </div>-->
-            <table id="routes">
-                <tr>       <th>Leisure Routes </th>   </tr>
-                <tr>
-                    <td>
-                        <a id="portreath" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr40.gpx">Portreath</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a id="bmmr40" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr40.gpx">BMMR 40 km route (easy)</a>
-                    </td>
-                </tr>
-                <tr>        <th>Intermediate Routes </th>    </tr>
-                <tr>
-                    <td>
-                        <a id="stithians" data-gpx-source="https://quilkin.co.uk/gpxmaps/Stithians_Int.gpx">Stithians</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a id="bmmr55" data-gpx-source="https://quilkin.co.uk/gpxmaps/bmmr55.gpx">BMMR 55km route</a>
-                    </td>
-                </tr>
-                <tr>        <th>Longer Routes </th>    </tr>
-                <tr>
-                    <td>
-                        <a id="LandsEnd" data-gpx-source="https://quilkin.co.uk/gpxmaps/NearlyLandsEnd.gpx">Nearly Land's End</a>
-                    </td>
-                </tr>
+
+            <table id="routesTitle">
+                    <tr>  <th colspan="3">Trurocycling.org</th>   </tr>
             </table>
+            <table id="routesHeader">
+                <tr>  <th colspan="3">Choose a route...</th>   </tr>
+            </table>
+            <br/>
+            <table id="routes">
+            </table>
+            <div id="newRoute">
+                <br />
+                Add new route:
+                <br />
+                Name: <input type="text" id="name">
+                <br/>
+                Dist (km.): <input type="number" id="dist">
+                <br />
+                Input GPX (URL or complete data):
+                <br />
+                <textarea rows="10" cols="29" id="gpx"></textarea>
+                <br />
+                <input id="OK" type="button" value="OK" onclick="validateForm();">
+            </div>
         </div>
 
         <!--<div class="panel2">-->
             <div id="demo" class="panel2 gpx" data-map-target="demo-map" data-elev-target="demo-elev">
                 <header>
-                    <h3>Choose a route....</h3>
+                    <h3>Trurocycling.org routes</h3>
                     <span class="start"></span>
                 </header>
 
@@ -198,6 +201,8 @@
                 <article>
                     <div class="elev" id="demo-elev"></div>
                 </article>
+
+                    <!--<canvas class="elev" id="demo-elev1"></canvas>-->
 
                 <footer>
                     <ul class="info">
@@ -226,6 +231,8 @@
         <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
         <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
         <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
         <script src="elev.js"></script>
         <script src="gpx.js"></script>
         <script src="gpxmap.js"></script>
