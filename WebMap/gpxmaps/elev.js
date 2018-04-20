@@ -29,10 +29,16 @@
 //        }
 //    });
 //}
+var chart;
+
+function clearChart() {
+    //   chart.validateData();
+    chart.clear();
+}
 function drawProfile(elevid, elev_data) {
 
 
-    var chart = AmCharts.makeChart(elevid, {
+    chart = AmCharts.makeChart(elevid, {
         "type": "serial",
         "theme": "light",
    

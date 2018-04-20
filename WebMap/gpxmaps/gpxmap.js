@@ -34,15 +34,31 @@ function display_gpx(url) {
         },
     }).on('loaded', function (e) {
         var gpx = e.target;
-        var elev_data = gpx.get_elevation_data();
+        var elev_data;
         map.fitBounds(gpx.getBounds());
    //     control.addOverlay(gpx, gpx.get_name());
 
+        _t('h3').textContent = gpx.get_name() + "  ";
+        if (url.indexOf('trurocycling.gpx') == -1) {
+            // add a download link
+            var a = document.createElement('a');
+            var linkText = document.createTextNode("(download GPX)");
+            a.style.fontStyle = "italic";
+            a.appendChild(linkText);
+            a.title = "download GPX";
+            a.href = url;
+            _t('h3').appendChild(a);
+        }
+        else {
+            _t('h3').textContent = "Trurocycling meet here";
+        }
+       
         /*
          * Note: the code below relies on the fact that the demo GPX file is
          * an actual GPS track with timing and heartrate information.
          */
-        _t('h3').textContent = gpx.get_name();
+
+
         //_c('start').textContent = gpx.get_start_time().toDateString() + ', '
         //  + gpx.get_start_time().toLocaleTimeString();
         _c('distance').textContent = (gpx.get_distance()/1000).toFixed(1);
@@ -54,15 +70,23 @@ function display_gpx(url) {
         _c('elevation-net').textContent = (gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0);
 
         //drawProfile1("demo-elev", elev_data);
+        if (gpx.get_elevation_gain() > 0 && gpx.get_elevation_loss() > 0) {
+            var elev_data = gpx.get_elevation_data();
+            // convert array to json for profile graph
+            var i, n = elev_data.length;
+            var json_elev = new Array();
+            for (i = 0; i < n; i++) {
+                json_elev.push(new height(elev_data[i][0].toFixed(1), elev_data[i][1].toFixed(0)));
 
-        // convert array to json for profile graph
-        var i, n = elev_data.length;
-        var json_elev = new Array();
-        for (i = 0; i < n; i++) {
-            json_elev.push(new height(elev_data[i][0].toFixed(1), elev_data[i][1].toFixed(0)));
+            }
+            _c('elevation-none').textContent = "";
+            drawProfile(elevid, json_elev);
+        }
+        else {
+            clearChart();
+            _c('elevation-none').textContent =" : No elevation data in this file";
 
         }
-        drawProfile(elevid, json_elev);
 
     }).addTo(map);
 
@@ -77,15 +101,21 @@ function height(dist_t, height_t) {
 var routeTable, r, route, row,  destination, distance, type, url;
 
 var routes = [
-    ['Stithians Lake', 'Intermediate', '50km', "https://quilkin.co.uk/gpxmaps/Stithians_Int.gpx"],
+
+    ["Mylor", 'Leisure', '60km', "https://quilkin.co.uk/gpxmaps/Mylor.gpx"],
     ['BMMR short ', 'Leisure', '40km', "https://quilkin.co.uk/gpxmaps/bmmr40.gpx"],
+    ["Perranporth", 'Leisure', '25km', "https://quilkin.co.uk/gpxmaps/Perranporth.gpx"],
     ['BMMR medium', 'Intermediate', '55km'," https://quilkin.co.uk/gpxmaps/bmmr55.gpx"],
-    ["Nearly Land's End", 'Long', '130km', "https://quilkin.co.uk/gpxmaps/NearlyLandsEnd.gpx"],
+    ["Hell's Mouth", 'Intermediate', '60km', "https://quilkin.co.uk/gpxmaps/HellsMouth.gpx"],
+    ['Stithians Lake', 'Intermediate', '50km', "https://quilkin.co.uk/gpxmaps/Stithians_Int.gpx"],
+    ["Tehidy", 'Intermediate', '53km', "https://quilkin.co.uk/gpxmaps/Tehidy.gpx"],
+    ['BMMR 100', 'Long', '100km', " https://quilkin.co.uk/gpxmaps/bmmr-100.gpx"],
     
 ]
 document.getElementById("newRoute").style.display = "none";
 routeTable = document.getElementById('routes');
 createRouteTable();
+display_gpx("https://quilkin.co.uk/gpxmaps/trurocycling.gpx");
 
 function createRouteTable() {
 
@@ -100,17 +130,23 @@ function createRouteTable() {
         type.innerHTML = route[1];
         distance.innerHTML = route[2];
         (function (url) {
-            row.addEventListener("click", function () { display_gpx(url); });
+            row.addEventListener("click", function () {
+                document.getElementById("newRoute").style.display = "none";
+                display_gpx(url);
+            });
         })(route[3]);
 
     }
     row = routeTable.insertRow(r);
     destination = row.insertCell(0);
-    destination.colSpan = 3;
+    destination.colSpan = 4;
     destination.innerHTML = "Add new route";
     row.addEventListener("click", function () {
        // location.href = "addRoute.html";
         document.getElementById("newRoute").style.display = "block";
+        document.getElementById("dist").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("gpx").value = "";
 
     });
 
@@ -135,6 +171,7 @@ function validateForm() {
     document.getElementById("newRoute").style.display = "none";
     routes.push([newName, ' ', newDist+'km', newGPX]);
     createRouteTable();
+    display_gpx(newGPX)
     return true;
 }
 
