@@ -7,11 +7,11 @@ var MapData = (function ($) {
     "use strict";
 
     var MapData = {};
-    
+
 
     function urlBase() {
-     return "https://localhost/WebMap/WebMap.svc/";
-      //  return "https://www.quilkin.co.uk/WebMap.svc/";
+     //return "https://localhost/WebMap/WebMap.svc/";
+     return "/WebMap.svc/";
      
 
     }
@@ -83,6 +83,7 @@ var myMap = (function ($) {
     // message when off track
     var offTrack1 = "Attention! You are "
     var offTrack2 = " metres off course. Correct course is to the "
+    var user = "none";
 
     var myMap = {},
         map = null,
@@ -181,6 +182,7 @@ var myMap = (function ($) {
         u = $("#username").val();
         p = $("#password").val();
         //userRole = 0;
+        user = u;
 
 
         //MapData.json('GetLocationsGet', "GET", null, function (locs) {
@@ -235,7 +237,7 @@ var myMap = (function ($) {
 
     function updateMap(userid, firstUpdate) {
         // get the list of points to map
-        var tempID = userID;
+        var tempID = userid;
         if (!firstUpdate) {
             tempID = -tempID;
         }
@@ -244,7 +246,7 @@ var myMap = (function ($) {
 
             // first point will be the latest one recorded, use this to centre the map
             location = locs[0];
-            map.setView([location.latitude, location.longitude],14);
+          
 
             var index, count = locs.length;
             var now = new Date();
@@ -272,6 +274,10 @@ var myMap = (function ($) {
                         if (timediff < 60 * 60000) {
                             // newer than one hour
                             colour = 'red';
+                            if (userid == 3) // van
+                            {
+                                colour = 'orange';
+                            }
                         }
                     }
                     else {
@@ -284,13 +290,23 @@ var myMap = (function ($) {
                         fillColor: colour,
                         fillOpacity: 0.5
                     }).addTo(map);
-                    circle.bindPopup(loc.recorded_at);
+                    var popupname = user;
+                    if (userid == 3) {
+                        popupname = 'Van';
+                    }
+                    circle.bindPopup(popupname  + ': ' + loc.recorded_at);
                 }
             }
-
+            if (userid != 3)  // van
+            {
+                // also add van's location
+                updateMap(3, false);
+            }
+            map.setView([location.latitude, location.longitude], 14);
 
 
         }, true, null);
+
     }
 
     function createMap(userid) {

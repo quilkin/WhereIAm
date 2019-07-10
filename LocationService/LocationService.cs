@@ -106,7 +106,7 @@ namespace LocationService
             //TTS = Plugin.TextToSpeech.CrossTextToSpeech.Current;
             locator.DesiredAccuracy = 50;
             //locator.StartListeningAsync(12000, 0);
-            locator.StartListeningAsync(120000, 0);
+            locator.StartListeningAsync(300000, 0);
 
 
             locator.PositionChanged += Locator_PositionChanged;
