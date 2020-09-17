@@ -106,7 +106,9 @@ namespace LocationService
             //TTS = Plugin.TextToSpeech.CrossTextToSpeech.Current;
             locator.DesiredAccuracy = 50;
             //locator.StartListeningAsync(12000, 0);
-            locator.StartListeningAsync(300000, 0);
+            // get new location every minute
+            TimeSpan updateFreq = new TimeSpan(TimeSpan.TicksPerMinute);
+            locator.StartListeningAsync(updateFreq, 0);
 
 
             locator.PositionChanged += Locator_PositionChanged;
@@ -148,9 +150,9 @@ namespace LocationService
                 double diffLon = position.Longitude - lastLocation.Longitude;
                 double distance = Math.Sqrt(Math.Abs(diffLat * diffLat + diffLon * diffLon));
 
-                if (distance < 0.001)
+                if (distance < 0.002)
                 {
-                    // not really moved; delay transmissions
+                    // not really moved; delay transmissions for up to 5 minutes
                     if (++positionCount < 5)
                         return;
                 }
@@ -272,8 +274,9 @@ namespace LocationService
                 // it's OK now, can stop timer
                 s.tmr.Dispose();
                 s.tmr = null;
+                TimeSpan gpsFreq = new TimeSpan(2 * TimeSpan.TicksPerMinute);
                 locator.StopListeningAsync();
-                locator.StartListeningAsync(120000, 0);
+                locator.StartListeningAsync(gpsFreq, 0);
 
                 locator.PositionChanged += Locator_PositionChanged;
                 locator.PositionError += Locator_PositionError;

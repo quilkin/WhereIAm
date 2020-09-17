@@ -301,8 +301,10 @@ var myMap = (function ($) {
             {
                 // also add van's location
                 updateMap(3, false);
+                // but centre map on me
+                map.setView([location.latitude, location.longitude], 14);
             }
-            map.setView([location.latitude, location.longitude], 14);
+           
 
 
         }, true, null);
