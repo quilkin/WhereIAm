@@ -16,6 +16,7 @@ namespace LocationService
         public DateTime time;
         public bool same;
         public static int owner;
+        public static string username;
 
     }
 
@@ -80,6 +81,7 @@ namespace LocationService
             try
             {
                 Location.owner = prefs.GetInt("owner", 0);
+                Location.username = prefs.GetString("user", "unknown");
             }
             catch
             {
@@ -182,6 +184,35 @@ namespace LocationService
       
                         
                         string result = client.UploadString(UrlBase.urlBase + "SaveLocation", json);
+                        if (result.Contains("NewPasswordRequired"))
+                        {
+                            Intent intent = new Intent(this, typeof(PasswordActivity));
+
+                            // Create a PendingIntent; we're only using one PendingIntent (ID = 0):
+                            const int pendingIntentId = 0;
+                            PendingIntent pendingIntent =
+                                PendingIntent.GetActivity(this, pendingIntentId, intent, PendingIntentFlags.OneShot);
+
+                            // Instantiate the builder and set notification elements, including pending intent:
+                            Notification.Builder builder = new Notification.Builder(this)
+                                .SetContentIntent(pendingIntent)
+                                .SetContentTitle("New password requested")
+                                .SetContentText("Tap to create new password")                                
+                                .SetSmallIcon(Resource.Drawable.icon);
+
+                            // Build the notification:
+                            Notification notification = builder.Build();
+
+                            // Get the notification manager:
+                            NotificationManager notificationManager =
+                                GetSystemService(Context.NotificationService) as NotificationManager;
+
+                            // Publish the notification:
+                            const int notificationId = 0;
+                            notificationManager.Notify(notificationId, notification);
+
+                            return;
+                        }
                         builder.SetContentTitle(string.Format("lat:{0},long:{1}", position.Latitude.ToString("00.0000"), position.Longitude.ToString("00.0000")));
                         builder.SetAutoCancel(true);
 

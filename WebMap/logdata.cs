@@ -225,6 +225,73 @@ namespace WebMap
         }
 
     }
+
+    [DataContract]
+    public class CamperData
+    {
+        [DataMember(Name = "vanT")]
+        public int VanTemp { get; set; }
+        [DataMember(Name = "shadeT")]
+        public int ShadeTemp { get; set; }
+        [DataMember(Name = "fridgeT")]
+        public int FridgeTemp { get; set; }
+        [DataMember(Name = "battV")]
+        public int BatteryVolts { get; set; }
+        [DataMember(Name = "panelV")]
+        public int PanelVolts { get; set; }
+        [DataMember(Name = "panelP")]
+        public int PanelPower { get; set; }
+        [DataMember(Name = "loadC")]
+        public int LoadCurrent { get; set; }
+        [DataMember(Name = "yield")]
+        public int YieldToday { get; set; }
+        [DataMember(Name = "maxP")]
+        public int MaxPowerToday { get; set; }
+
+
+        [DataMember(Name = "seq")]
+        public int Sequence { get; set; }
+        [DataMember(Name = "period")]
+        public int Period { get; set; }
+        [DataMember(Name = "time")]
+        public String Time { get; set; }
+        [DataMember(Name = "owner")]
+        public int Owner { get; set; }
+
+        public static DateTime JSTimeToNetTime(long time)
+        {
+            DateTime t = new DateTime(1970, 1, 1);
+            return t.AddMilliseconds(time);
+        }
+        public CamperData(int vanT, int shadeT, int fridgeT, int battV, int panelV, int panelP, int loadC, int yield, int maxP, int seq)
+        {
+            VanTemp = vanT;
+            ShadeTemp = shadeT;
+            FridgeTemp = fridgeT;
+            BatteryVolts = battV;
+            PanelVolts = panelP;
+            PanelPower = panelP;
+            LoadCurrent = loadC;
+            YieldToday = yield;
+            MaxPowerToday = maxP;
+            Sequence = seq;
+        }
+        public CamperData(int vanT, int shadeT, int fridgeT, int battV, int panelV, int panelP, int loadC, int yield, int maxP, string time)
+        {
+            VanTemp = vanT;
+            ShadeTemp = shadeT;
+            FridgeTemp = fridgeT;
+            BatteryVolts = battV;
+            PanelVolts = panelV;
+            PanelPower = panelP;
+            LoadCurrent = loadC;
+            YieldToday = yield;
+            MaxPowerToday = maxP;
+            Time = time;
+        }
+
+    }
+
     public class LogEntry
     {
         public string IP { get; set; }
