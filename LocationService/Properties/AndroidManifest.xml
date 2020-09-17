@@ -4,6 +4,7 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<application android:label="LocationService" android:icon="@drawable/icon">
 		<!-- Declaring broadcast receiver for BOOT_COMPLETED event. 
         <receiver android:name=".MyReceiver" android:enabled="true" android:exported="false">

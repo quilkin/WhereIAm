@@ -277,10 +277,10 @@ namespace LocationService
 		{
 			base.OnStart ();
 
-			//var locationServiceIntent = new Intent ("com.xamarin.LocationService");
-			//locationServiceConnection = new LocationServiceConnection (this);
-			//BindService (locationServiceIntent, locationServiceConnection, Bind.AutoCreate);
-		}
+            //var locationServiceIntent = new Intent("com.xamarin.LocationService");
+            //locationServiceConnection = new LocationServiceConnection(this);
+            //BindService(locationServiceIntent, locationServiceConnection, Bind.AutoCreate);
+        }
 
 		protected override void OnDestroy ()
 		{
