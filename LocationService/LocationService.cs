@@ -6,6 +6,7 @@ using Android.OS;
 using System.Net;
 using System.Threading;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace LocationService
 {
@@ -52,12 +53,13 @@ namespace LocationService
         Plugin.Geolocator.Abstractions.IGeolocator locator;
         //Plugin.TextToSpeech.Abstractions.ITextToSpeech TTS;
         int positionCount = 0;
-        //double lastLatitude, lastLongitude;
+   
         Location lastLocation;
         List<Location> savedLocations;
         const int maxLocations = 200;
-        //bool testfunc = true;
-        //int skip = 0, skips = 0;
+        Random rand = new Random();
+
+        HttpClient client;
 
         public object CrossGeolocator { get; private set; }
 
@@ -105,21 +107,18 @@ namespace LocationService
             lastLocation.Longitude = 0;
 
             locator = Plugin.Geolocator.CrossGeolocator.Current;
-            //TTS = Plugin.TextToSpeech.CrossTextToSpeech.Current;
             locator.DesiredAccuracy = 50;
-            //locator.StartListeningAsync(12000, 0);
+
             // get new location every minute
             TimeSpan updateFreq = new TimeSpan(TimeSpan.TicksPerMinute);
-            locator.StartListeningAsync(updateFreq, 0);
+            //only update every minute and if distance changed is > 10 metres
+            locator.StartListeningAsync(updateFreq, 1);
 
 
             locator.PositionChanged += Locator_PositionChanged;
             locator.PositionError += Locator_PositionError;
-            
-           // _player = Android.Media.MediaPlayer.Create(this, Resource.Raw.Alarm);
-            //TTS.Speak("service started");
 
-            //binder = new LocationServiceBinder(this);
+            client = new HttpClient();
 
         }
         private string DBTime(DateTime t)
@@ -136,17 +135,83 @@ namespace LocationService
                 hour.ToString("00"), min.ToString("00"), sec.ToString("00"));
 
         }
+        //public interface IMessage
+        //{
+        //    void LongAlert(string message);
+        //    void ShortAlert(string message);
+        //}
+        //public class MessageAndroid : IMessage
+        //{
+        //    public void LongAlert(string message)
+        //    {
+        //        Android.Widget.Toast.MakeText(Application.Context, message, Android.Widget.ToastLength.Long).Show();
+        //    }
+
+        //    public void ShortAlert(string message)
+        //    {
+        //        Android.Widget.Toast.MakeText(Application.Context, message, Android.Widget.ToastLength.Short).Show();
+        //    }
+        //}
+
+        private void popup(string message)
+        {
+            //  DependencyService.Get<IMessage>().ShortAlert(message);
+           // Android.Widget.Toast.MakeText(Android.App.Activity., message, Android.Widget.ToastLength.Long).Show();
+        }
+        public void TimerCheck(Object stateInfo)
+        {
+            AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
+        //    ++timerInvokes;
+            autoEvent.Set();
+        }
+        private void RandomiseForTesting(ref double lat, ref double lng)
+        {
+            //lat += rand.Next(100) / 1000.0;
+            //lng += rand.Next(100) / 1000.0;
+        }
+
+        private string UploadResult(HttpClient client, double lat, double lng, DateTime t)
+        {
+            //string result;
+            RandomiseForTesting(ref lat, ref lng);
+
+            // need to wait  a bit if busy??
+            //var autoEvent = new AutoResetEvent(false);
+            //int timerInvokes = 0;
+            //Timer tim = new Timer(TimerCheck, autoEvent, 1000, 250);
+
+            //while (client.IsBusy && ++timerInvokes < 10)
+            //{
+            //    autoEvent.WaitOne();
+            //}
+            //if (timerInvokes < 10)
+            //{
+
+            //client.Headers[HttpRequestHeader.ContentType] = "application/json";
+            lat = Math.Round(lat, 5);
+            lng = Math.Round(lng, 5);
+            string json = string.Format("{{\"latitude\":{0:0.00000},\"longitude\":{1:0.0000},\"recorded_at\":\"{2}\",\"owner\":{3}}}",
+                lat, lng, DBTime(t), Location.owner);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            Uri uri = new Uri(UrlBase.urlBase + "SaveLocation");
+            //result = client.UploadString(uri, "POST",json);
+            var response = client.PostAsync(uri, content);
+            //}
+            //else
+            //{
+            //    result = "WebClient timed out";
+            //}
+            //tim.Dispose();
+            return response.ToString();
+        }
 
         private void Locator_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
+            //WebClient client = new WebClient();
             if (locator.IsGeolocationEnabled && locator.IsGeolocationAvailable)
             {
                 var position = e.Position;
-                //if (testfunc)
-                //{
-                //    position.Latitude += 0.01;
-                //}
-                //testfunc = !testfunc;
+
                 double diffLat = position.Latitude - lastLocation.Latitude;
 
                 double diffLon = position.Longitude - lastLocation.Longitude;
@@ -176,108 +241,98 @@ namespace LocationService
                     ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-                    using (WebClient client = new WebClient())
-                    {
-                        string json = string.Format("{{\"latitude\":{0},\"longitude\":{1},\"recorded_at\":\"{2}\",\"owner\":{3}}}", 
-                            position.Latitude, position.Longitude, DBTime(thisLocation.time),Location.owner);
-                        client.Headers[HttpRequestHeader.ContentType] = "application/json";
-      
-                        
-                        string result = client.UploadString(UrlBase.urlBase + "SaveLocation", json);
-                        if (result.Contains("NewPasswordRequired"))
-                        {
-                            Intent intent = new Intent(this, typeof(PasswordActivity));
+                    //using (WebClient client = new WebClient())
+                    //{
+                    //string json = string.Format("{{\"latitude\":{0},\"longitude\":{1},\"recorded_at\":\"{2}\",\"owner\":{3}}}", 
+                    //    position.Latitude, position.Longitude, DBTime(thisLocation.time),Location.owner);
 
-                            // Create a PendingIntent; we're only using one PendingIntent (ID = 0):
-                            const int pendingIntentId = 0;
-                            PendingIntent pendingIntent =
-                                PendingIntent.GetActivity(this, pendingIntentId, intent, PendingIntentFlags.OneShot);
 
-                            // Instantiate the builder and set notification elements, including pending intent:
-                            Notification.Builder builder = new Notification.Builder(this)
-                                .SetContentIntent(pendingIntent)
-                                .SetContentTitle("New password requested")
-                                .SetContentText("Tap to create new password")                                
-                                .SetSmallIcon(Resource.Drawable.icon);
-
-                            // Build the notification:
-                            Notification notification = builder.Build();
-
-                            // Get the notification manager:
-                            NotificationManager notificationManager =
-                                GetSystemService(Context.NotificationService) as NotificationManager;
-
-                            // Publish the notification:
-                            const int notificationId = 0;
-                            notificationManager.Notify(notificationId, notification);
-
-                            return;
-                        }
-                        builder.SetContentTitle(string.Format("lat:{0},long:{1}", position.Latitude.ToString("00.0000"), position.Longitude.ToString("00.0000")));
-                        builder.SetAutoCancel(true);
+                    //string result = client.UploadString(UrlBase.urlBase + "SaveLocation", json);
+                    string result = UploadResult(client, position.Latitude, position.Longitude, thisLocation.time);
+                       
+                       // builder.SetContentTitle(string.Format("lat:{0},long:{1}", position.Latitude.ToString("00.0000"), position.Longitude.ToString("00.0000")));
+                        // builder.SetAutoCancel(true);
 
                         if (savedLocations.Count > 0)
                         {
                             // send saved locations now
-                            foreach (Location loc in savedLocations)
+                            try
                             {
-                                json = string.Format("{{\"latitude\":{0},\"longitude\":{1},\"recorded_at\":\"{2}\",\"owner\":{3}}}",
-                                    loc.Latitude, loc.Longitude,DBTime(loc.time), Location.owner);
-                                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                                client.UploadString(UrlBase.urlBase + "SaveLocation", json);
+                                popup("trying to send others...1");
+                                foreach (Location loc in savedLocations)
+                                {
+                                    //json = string.Format("{{\"latitude\":{0},\"longitude\":{1},\"recorded_at\":\"{2}\",\"owner\":{3}}}",
+                                    //    loc.Latitude, loc.Longitude, DBTime(loc.time), Location.owner);
+                                    //popup("trying to send others...2");
+                                    //client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                                    //client.UploadString(UrlBase.urlBase + "SaveLocation", json);
+                                    result = UploadResult(client, loc.Latitude, loc.Longitude, loc.time);
+                                }
+                                popup("trying to send others...3");
+                                builder.SetContentTitle(string.Format("{0} stored locations saved", savedLocations.Count));
+                                savedLocations.Clear();
+                                popup("trying to send others...4");
                             }
-                            builder.SetContentTitle(string.Format("{0} stored locations saved", savedLocations.Count));
-                            savedLocations.Clear();
-                            //skips = 0;
-                            //skip = 0;
+                            catch (Exception ex2)
+                            {
+                                builder.SetContentTitle("Error: " +ex2.Message);
+                                builder.SetContentText(savedLocations.Count + " positions stored");
+                                notification = builder.Build();
+                                notificationManager.Notify(notificationID, notification);
+                                return;
+                            }
                         }
                         
                         builder.SetContentText("Posted to Web at " + DateTime.Now.ToShortTimeString());
                         notification = builder.Build();
                         notificationManager.Notify(notificationID, notification);
-                    }
+                        
+                        //client.Dispose();
+                    //}
                 }
                 catch (Exception ex)
                 {
-                    // cannot get web access at present.
-                    // need to temporarily store some locations
+                    //if (ex.Message.Contains("Bad Request") == false)
+                    //{
+                        // cannot get web access at present.?
+                        // need to temporarily store some locations
 
-                    // may need to miss out some values if storage has been exceeded        
-                    //while (skip > 0)
-                    //{ --skip; return; }
+                        // may need to miss out some values if storage has been exceeded        
 
-                    if (savedLocations.Count < maxLocations)
-                    {
-                        savedLocations.Add(thisLocation);
-                    }
-                    else
-                    {
-                        // limit size of list for now, first remove any which are at same location
-                        for (int i = savedLocations.Count - 1; i >= 0; i -= 1)
+                        if (savedLocations.Count < maxLocations)
                         {
-                            Location loc = savedLocations[i];
-                            if (loc.same)
-                                savedLocations.RemoveAt(i);
+                            savedLocations.Add(thisLocation);
                         }
-                        if (savedLocations.Count >= maxLocations)
+                        else
                         {
-                            // still too many, remove every other one
-                            for (int i = savedLocations.Count - 1; i >= 0; i -= 2)
+                            // limit size of list for now, first remove any which are at same location
+                            for (int i = savedLocations.Count - 1; i >= 0; i -= 1)
                             {
-                                savedLocations.RemoveAt(i);
+                                Location loc = savedLocations[i];
+                                if (loc.same)
+                                    savedLocations.RemoveAt(i);
                             }
-                            //if (skips == 0)
-                            //    skips = 2;
-                            //else
-                            //    skips = skips + skips;
+                            if (savedLocations.Count >= maxLocations)
+                            {
+                                // still too many, remove every other one
+                                for (int i = savedLocations.Count - 1; i >= 0; i -= 2)
+                                {
+                                    savedLocations.RemoveAt(i);
+                                }
+
+                            }
+                            builder.SetContentTitle("Shortened list @" + DateTime.Now.ToShortTimeString());
+                            builder.SetContentText(savedLocations.Count + " positions stored");
                         }
-                        builder.SetContentTitle("Shortened list @" + DateTime.Now.ToShortTimeString());
-                        builder.SetContentText(savedLocations.Count + " positions stored");
-                    }
-                    builder.SetContentTitle("Web error @" + DateTime.Now.ToShortTimeString());
-                    builder.SetContentText(savedLocations.Count + " positions stored");
-                    notification = builder.Build();
-                    notificationManager.Notify(notificationID, notification);
+                        builder.SetContentTitle("Error @" + DateTime.Now.ToShortTimeString());
+                        builder.SetContentText(ex.Message + " " + savedLocations.Count + " positions stored");
+                        notification = builder.Build();
+                        notificationManager.Notify(notificationID, notification);
+                    //}
+                }
+                finally
+                {
+                //    client.Dispose();
                 }
             }
             else

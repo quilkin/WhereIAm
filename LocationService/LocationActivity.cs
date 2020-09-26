@@ -21,7 +21,7 @@ namespace LocationService
     public class UrlBase
     {
         public static string urlBase = "https://www.quilkin.co.uk/WebMap.svc/";
-        //public static string urlBase = "https://CE568/WebMap/WebMap.svc/";
+      //  public static string urlBase = "https://CE568/WebMap/WebMap.svc/";
         //public static string urlBase = "http://timetrials.org.uk/Service1.svc/";
     }
 

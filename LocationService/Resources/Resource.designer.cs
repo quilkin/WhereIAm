@@ -445,11 +445,17 @@ namespace LocationService
 			// aapt resource value: 0x7f050003
 			public const int app_name = 2131034115;
 			
+			// aapt resource value: 0x7f050007
+			public const int new_password = 2131034119;
+			
 			// aapt resource value: 0x7f050005
 			public const int set_new_user = 2131034117;
 			
 			// aapt resource value: 0x7f050004
 			public const int set_user = 2131034116;
+			
+			// aapt resource value: 0x7f050008
+			public const int settings = 2131034120;
 			
 			// aapt resource value: 0x7f050001
 			public const int start_service = 2131034113;
@@ -459,6 +465,12 @@ namespace LocationService
 			
 			// aapt resource value: 0x7f050002
 			public const int stop_service = 2131034114;
+			
+			// aapt resource value: 0x7f050006
+			public const int user_name = 2131034118;
+			
+			// aapt resource value: 0x7f050009
+			public const int where_am_i = 2131034121;
 			
 			static String()
 			{
