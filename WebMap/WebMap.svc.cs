@@ -360,13 +360,13 @@ namespace WebMap
                     DataRow dr = dataLogins.Rows[0];
                     double latitude1 = Convert.ToDouble(dr["lat"]);
                     double longitude1 = Convert.ToDouble(dr["lon"]);
-                    DateTime time1 = (DateTime)dr["dt"];
+                    //DateTime time1 = (DateTime)dr["dt"];
                     int id = (int)dr["id"];
 
                     dr = dataLogins.Rows[1];
                     double latitude2 = Convert.ToDouble(dr["lat"]);
                     double longitude2 = Convert.ToDouble(dr["lon"]);
-                    DateTime time2 = (DateTime)dr["dt"];
+                    //DateTime time2 = (DateTime)dr["dt"];
 
 
                     double diffLat = Math.Abs(latitude1 - latitude2);
@@ -419,10 +419,10 @@ namespace WebMap
             // new position, add a new entry
             try
             {
-                string T = TimeString(DateTime.Now);
+                //string T = TimeString(loc.Time);
 
                 query = string.Format("insert into locations (lat,lon,dt,owner) values ('{0}','{1}','{2}',{3})",
-                        loc.Latitude, loc.Longitude, T, loc.Owner);
+                        loc.Latitude, loc.Longitude, loc.Time, loc.Owner);
 
 
                 using (System.Data.SqlClient.SqlCommand command = new SqlCommand(query, mapConnection))
@@ -430,7 +430,7 @@ namespace WebMap
                     successRows = command.ExecuteNonQuery();
                 }
                 if (successRows == 1)
-                    result = string.Format("Location {0} {1} saved OK at {2} for {3}", loc.Latitude, loc.Longitude, DateTime.Now, loc.Owner);
+                    result = string.Format("Location {0} {1} saved OK at {2} for {3}", loc.Latitude, loc.Longitude, loc.Time, loc.Owner);
                 else
                     result = string.Format("Database error: Location not saved");
 
