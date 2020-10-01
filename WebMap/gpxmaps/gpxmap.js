@@ -19,8 +19,8 @@ function display_gpx(url) {
 
     if (map != undefined) { map.remove(); }
     map = L.map(mapid);
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>'
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.osm.org">OpenStreetMap</a>'
     }).addTo(map);
 
   //  var control = L.control.layers(null, null).addTo(map);
@@ -28,9 +28,9 @@ function display_gpx(url) {
     new L.GPX(url, {
         async: true,
         marker_options: {
-            startIconUrl: 'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-start.png',
-            endIconUrl: 'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-end.png',
-            shadowUrl: 'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-shadow.png',
+            startIconUrl: 'https://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-start.png',
+            endIconUrl: 'https://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-end.png',
+            shadowUrl: 'https://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-shadow.png',
         },
     }).on('loaded', function (e) {
         var gpx = e.target;

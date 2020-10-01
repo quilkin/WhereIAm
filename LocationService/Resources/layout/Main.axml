@@ -17,5 +17,23 @@
         android:id="@+id/setUsername"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/set_user" />
+        android:text="@string/set_new_user" />
+    <TextView
+        android:text="   "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
+    <TextView
+        android:text="To view your location data, go to quilkin.co.uk"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4" />
+    <TextView
+        android:text="For help, please email chris@quilkin.co.uk"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3" />
 </LinearLayout>

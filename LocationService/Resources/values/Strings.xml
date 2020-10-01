@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="start_service">Start Service</string>
-	<string name="stop_service">Stop Service</string>
-	<string name="app_name">LocationService</string>
+	<string name="start_service">Start location recording</string>
+	<string name="stop_service">Stop recording</string>
+	<string name="app_name">Where Am I</string>
   <string name="set_user">Set username</string>
-  <string name="set_new_user">Account</string>
+  <string name="set_new_user">Your account</string>
   <string name="user_name">Username: </string>
   <string name="new_password">Set New password</string>
   <string name="settings">Settings</string>

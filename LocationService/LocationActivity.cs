@@ -26,11 +26,13 @@ namespace LocationService
 
 
 
-    [Activity (Label = "LocationService", MainLauncher = true)]
+    [Activity (Label = "Where Am I", MainLauncher = true)]
 	public class LocationActivity : Activity
 	{
- //       Toast messageToast;
-
+        //       Toast messageToast;
+        bool ServiceRunning = false;
+        ISharedPreferences prefs;
+        ISharedPreferencesEditor editor;
 
         protected override void OnCreate (Bundle bundle)
 		{
@@ -38,7 +40,9 @@ namespace LocationService
 
 			SetContentView (Resource.Layout.Main);
             // retreive saved user
-            ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+            prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+            editor = prefs.Edit();
+
             try
             {
                 Location.owner = prefs.GetInt("owner", 0);
@@ -47,19 +51,24 @@ namespace LocationService
             {
                 Location.owner = 0;
             }
+            try
+            {
+                ServiceRunning = prefs.GetBoolean("running", false);
+            }
+            catch
+            {
+                ServiceRunning = false;
+            }
 
             SetActions();
 
-            //messageToast = Toast.MakeText(this, "Default Message", ToastLength.Long);
-            //messageToast.SetGravity(GravityFlags.Center, 0, 0);
-            //messageToast.SetMargin(30, 30);
 
         }
         private void Message(string m)
         {
             Toast messageToast = Toast.MakeText(this,m, ToastLength.Long);
             messageToast.SetGravity(GravityFlags.Center, 0, 0);
-           
+         //   messageToast.SetMargin(30, 30);
             messageToast.Show();
 
         }
@@ -71,7 +80,8 @@ namespace LocationService
             var user = FindViewById<Button>(Resource.Id.setUsername);
 
             Intent serviceIntent;
-           // stop.Enabled = false;
+
+            // stop.Enabled = false;
             if (Location.owner == 0)
             {
                 // need to log in before starting GPS service
@@ -81,6 +91,14 @@ namespace LocationService
             {
                 user.SetText(Resource.String.set_new_user);
             }
+            if (ServiceRunning)
+            {
+                start.Enabled = false;
+            }
+            else
+            {
+                stop.Enabled = false;
+            }
 
             start.Click += delegate {
 
@@ -89,6 +107,8 @@ namespace LocationService
                 start.Enabled = false;
                 stop.Enabled = true;
                 Message("Location recording started. It will continue in background, including after reboot, until 'stop service' is used");
+                editor.PutBoolean("running", true);
+                editor.Apply();
             };
 
 
@@ -100,7 +120,9 @@ namespace LocationService
                 if (Location.owner > 0)
                     start.Enabled = true;
                 Message("Location recording has been halted");
-            //    locationServiceConnection.activity.isBound = false;
+                editor.PutBoolean("running", false);
+                editor.Apply();
+
             };
             user.Click += delegate
             {
@@ -121,8 +143,7 @@ namespace LocationService
 
         private void SaveID(string result)
         {
-            ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(this);
-            ISharedPreferencesEditor editor = prefs.Edit();
+
 
             int idpos1 = result.IndexOf("\"id\":") + 5;
             int idpos2 = result.IndexOf(",", idpos1);

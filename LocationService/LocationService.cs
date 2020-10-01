@@ -103,7 +103,7 @@ namespace LocationService
             locator.DesiredAccuracy = 50;
 
             // get new location every 2 minutes
-            TimeSpan updateFreq = new TimeSpan(TimeSpan.TicksPerMinute * 2);
+           // TimeSpan updateFreq = new TimeSpan(TimeSpan.TicksPerMinute * 2);
             // locator.StartListeningAsync(updateFreq, 0);
             locator.StartListeningAsync(120000,0);
 
@@ -306,7 +306,7 @@ namespace LocationService
                 // it's OK now, can stop timer
                 s.tmr.Dispose();
                 s.tmr = null;
-                TimeSpan gpsFreq = new TimeSpan(2 * TimeSpan.TicksPerMinute);
+                //TimeSpan gpsFreq = new TimeSpan(2 * TimeSpan.TicksPerMinute);
                 locator.StopListeningAsync();
                // locator.StartListeningAsync(gpsFreq, 0);
                 locator.StartListeningAsync(120000, 0);
