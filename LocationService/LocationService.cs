@@ -236,7 +236,7 @@ namespace LocationService
                     else
                     {
                         // cannot get web access at present.
-                        builder.SetContentTitle("Internet error @" + DateTime.Now.ToShortTimeString());
+                        builder.SetContentTitle("No internet @" + DateTime.Now.ToShortTimeString());
                         builder.SetContentText(savedLocations.Count + " positions stored");
                         // need to temporarily store some locations
 

@@ -26,7 +26,7 @@ namespace LocationService
 
 
 
-    [Activity (Label = "Where Am I", MainLauncher = true)]
+    [Activity (Label = "Where Am I?", MainLauncher = true)]
 	public class LocationActivity : Activity
 	{
         //       Toast messageToast;
