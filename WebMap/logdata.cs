@@ -310,20 +310,32 @@ namespace WebMap
         public LogEntry()
         {
         }
-        public void Save(SqlConnection conn)
+        public string Save(SqlConnection conn)
         {
-            //if (this.Error != null)
-            //    this.Error = this.Error.Substring(0, 125);
-            //if (this.Result != null)
-            //    this.Result = this.Result.Substring(0, 125);
-            string query = string.Format("insert into log (time,ip,func,args,result,error) values ('{0}','{1}','{2}','{3}','{4}','{5}')",
-                WebMap.TimeString(DateTime.Now), this.IP, this.Function, this.Args,this.Result,this.Error);
-
-            using (System.Data.SqlClient.SqlCommand command = new SqlCommand(query, conn))
+            try
             {
-                command.ExecuteNonQuery();
-            }
+                string query;
+                if (Error != null && Error.Length > 2)
+                {
+                    query = string.Format("insert into log (time,ip,func,args,result,error) values ('{0}','{1}','{2}','{3}','{4}','{5}')",
+                        WebMap.TimeString(DateTime.Now), this.IP, this.Function, this.Args, this.Result, this.Error);
+                }
+                else
+                {
+                    query = string.Format("insert into log (time,ip,func,result) values ('{0}','{1}','{2}','{3}')",
+                        WebMap.TimeString(DateTime.Now), this.IP, this.Function, this.Result);
+                }
 
+                using (System.Data.SqlClient.SqlCommand command = new SqlCommand(query, conn))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            return string.Empty;
         }
     }
 }

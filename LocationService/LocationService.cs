@@ -1,3 +1,5 @@
+// #define TESTING
+
 using System;
 using Android.App;
 using Android.Util;
@@ -8,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http;
+
 
 namespace LocationService
 {
@@ -56,9 +59,10 @@ namespace LocationService
         Location lastLocation;
         List<Location> savedLocations;
         const int maxLocations = 200;
+#if TESTING
         Random rand = new Random();
-
-       // HttpClient client;
+#endif
+        // HttpClient client;
 
         public object CrossGeolocator { get; private set; }
 
@@ -102,16 +106,20 @@ namespace LocationService
             locator = Plugin.Geolocator.CrossGeolocator.Current;
             locator.DesiredAccuracy = 50;
 
-            // get new location every 2 minutes
-           // TimeSpan updateFreq = new TimeSpan(TimeSpan.TicksPerMinute * 2);
+            
+            // TimeSpan updateFreq = new TimeSpan(TimeSpan.TicksPerMinute * 2);
             // locator.StartListeningAsync(updateFreq, 0);
+#if TESTING
+            locator.StartListeningAsync(30000, 0);
+#else
+            // get new location every 2 minutes
             locator.StartListeningAsync(120000,0);
-
+#endif
 
             locator.PositionChanged += Locator_PositionChanged;
             locator.PositionError += Locator_PositionError;
 
-            //client = new HttpClient();
+
 
         }
         private string DBTime(DateTime t)
@@ -128,16 +136,18 @@ namespace LocationService
                 hour.ToString("00"), min.ToString("00"), sec.ToString("00"));
 
         }
-
+#if TESTING
         private void RandomiseForTesting(ref double lat, ref double lng)
         {
             lat += (rand.Next(100) / 1000.0) - 0.05;
             lng += (rand.Next(100) / 1000.0) - 0.05;
         }
-
+#endif
         private async Task<HttpResponseMessage> UploadResult(double lat, double lng, DateTime t)
         {
-      //      RandomiseForTesting(ref lat, ref lng);
+#if TESTING
+            RandomiseForTesting(ref lat, ref lng);
+#endif
 
             lat = Math.Round(lat, 5);
             lng = Math.Round(lng, 5);
@@ -162,6 +172,7 @@ namespace LocationService
                     response.ReasonPhrase = string.Format("Post failed: {0}", ex.Message);
 
                 }
+                
                 return response;
  
             }
@@ -177,13 +188,16 @@ namespace LocationService
 
                 double diffLon = position.Longitude - lastLocation.Longitude;
                 double distance = Math.Sqrt(Math.Abs(diffLat * diffLat + diffLon * diffLon));
+#if TESTING
 
+#else
                 if (distance < 0.002)
                 {
                     // not really moved; delay transmissions for up to 5 minutes
                     if (++positionCount < 5)
                         return;
                 }
+#endif
                 // position has changed or has been same for 5 consecutive calls; transmit anyway.
                 lastLocation.Latitude = position.Latitude;
                 lastLocation.Longitude = position.Longitude;
@@ -235,9 +249,23 @@ namespace LocationService
                     }
                     else
                     {
-                        // cannot get web access at present.
-                        builder.SetContentTitle("No internet @" + DateTime.Now.ToShortTimeString());
-                        builder.SetContentText(savedLocations.Count + " positions stored");
+                        if (result.ReasonPhrase.Contains("Bad"))
+                        {
+                            builder.SetContentTitle(result.ReasonPhrase + " @" + DateTime.Now.ToShortTimeString());
+
+                        }
+                        else
+                        {
+                            // cannot get web access at present.
+                            builder.SetContentTitle("No internet @" + DateTime.Now.ToShortTimeString());
+
+                        }
+                  
+#if TESTING
+                        builder.SetContentText(savedLocations.Count + " positions not stored at "+ UrlBase.urlBase);
+#else
+                        builder.SetContentText((savedLocations.Count+1) + " positions saved here");
+#endif
                         // need to temporarily store some locations
 
                         // may need to miss out some values if storage has been exceeded        

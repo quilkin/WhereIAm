@@ -318,34 +318,34 @@ namespace WebMap
 
             }
 
-            // First check to see if this user has asked for a new password
-            string query = string.Format("SELECT clubID FROM logins where Id = '{0}'\n\r", loc.Owner);
-            using (SqlDataAdapter loginAdapter2 = new SqlDataAdapter(query, mapConnection))
-            {
-                dataLogins = new DataTable();
-                loginAdapter2.Fill(dataLogins);
-                if (dataLogins.Rows.Count == 1)
-                {
-                    DataRow dr = dataLogins.Rows[0];
-                    int pwNeeded = (int)dr["clubID"];
-                    if (pwNeeded > 0)
-                    {
-                        query = string.Format("update logins set clubID = 0 where Id = '{0}'\n\r", loc.Owner);
-                        using (System.Data.SqlClient.SqlCommand command = new SqlCommand(query, mapConnection))
-                        {
-                            command.ExecuteNonQuery();
-                        }
-                        return "NewPasswordRequired";
+            //// First check to see if this user has asked for a new password
+            //string query = string.Format("SELECT clubID FROM logins where Id = '{0}'\n\r", loc.Owner);
+            //using (SqlDataAdapter loginAdapter2 = new SqlDataAdapter(query, mapConnection))
+            //{
+            //    dataLogins = new DataTable();
+            //    loginAdapter2.Fill(dataLogins);
+            //    if (dataLogins.Rows.Count == 1)
+            //    {
+            //        DataRow dr = dataLogins.Rows[0];
+            //        int pwNeeded = (int)dr["clubID"];
+            //        if (pwNeeded > 0)
+            //        {
+            //            query = string.Format("update logins set clubID = 0 where Id = '{0}'\n\r", loc.Owner);
+            //            using (System.Data.SqlClient.SqlCommand command = new SqlCommand(query, mapConnection))
+            //            {
+            //                command.ExecuteNonQuery();
+            //            }
+            //            return "NewPasswordRequired";
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
             // Only save a new location if it is different enough from pevious ones, 
             //  except that the last two locations always stored so that we can see how long we have been stopped for
 
             int successRows = 0;
-            query = string.Format("SELECT TOP 2 lat, lon, dt, id FROM locations  where owner = {0}  order by id desc", loc.Owner);
+            string query = string.Format("SELECT TOP 2 lat, lon, dt, id FROM locations  where owner = {0}  order by id desc", loc.Owner);
             string result = "";
 
 
@@ -393,7 +393,7 @@ namespace WebMap
                                     successRows = command.ExecuteNonQuery();
                                 }
                                 if (successRows == 1)
-                                    result = string.Format("Time updated for user {0} at {1}", loc.Owner, DateTime.Now);
+                                    result = string.Format("Time updated for user {0}", loc.Owner);
                                 else
                                     result = string.Format("Database error: update not saved");
                             }
@@ -430,7 +430,7 @@ namespace WebMap
                     successRows = command.ExecuteNonQuery();
                 }
                 if (successRows == 1)
-                    result = string.Format("Location {0} {1} saved OK at {2} for {3}", loc.Latitude, loc.Longitude, loc.Time, loc.Owner);
+                    result = string.Format("Location {0} {1} saved OK for user {2}", loc.Latitude, loc.Longitude, loc.Owner);
                 else
                     result = string.Format("Database error: Location not saved");
 
