@@ -197,7 +197,7 @@ namespace WebMap
                 userID = -userID;
                 howMany = 5;
             }
-            string query = string.Format("SELECT TOP {0} lat, lon, dt, id FROM locations  where owner = {1} order by id desc", howMany, userID);
+            string query = string.Format("SELECT TOP {0} lat, lon, dt, id FROM locations  where owner = {1} order by dt desc", howMany, userID);
 
             LogEntry log = new LogEntry(getIP(), "GetLocations", null);
 

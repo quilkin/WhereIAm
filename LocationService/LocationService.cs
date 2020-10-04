@@ -1,4 +1,4 @@
-// #define TESTING
+//#define TESTING
 
 using System;
 using Android.App;
@@ -58,9 +58,12 @@ namespace LocationService
         const string NOCONNECTION = "No connection available";
         Location lastLocation;
         List<Location> savedLocations;
-        const int maxLocations = 200;
-#if TESTING
         Random rand = new Random();
+#if TESTING
+        const int maxLocations = 20;
+
+#else
+        const int maxLocations = 200;
 #endif
         // HttpClient client;
 
@@ -137,17 +140,19 @@ namespace LocationService
 
         }
 #if TESTING
+        private double count = 0;
         private void RandomiseForTesting(ref double lat, ref double lng)
         {
-            lat += (rand.Next(100) / 1000.0) - 0.05;
-            lng += (rand.Next(100) / 1000.0) - 0.05;
+            //lat += (rand.Next(100) / 1000.0) - 0.05;
+            //lng += (rand.Next(100) / 1000.0) - 0.05;
+            lat += count / 100;
+            lng += count / 100;
+            count = count + 1.0;
         }
 #endif
         private async Task<HttpResponseMessage> UploadResult(double lat, double lng, DateTime t)
         {
-#if TESTING
-            RandomiseForTesting(ref lat, ref lng);
-#endif
+
 
             lat = Math.Round(lat, 5);
             lng = Math.Round(lng, 5);
@@ -205,6 +210,10 @@ namespace LocationService
                 Location thisLocation = new Location();
                 thisLocation.Latitude = position.Latitude;
                 thisLocation.Longitude = position.Longitude;
+#if TESTING
+                RandomiseForTesting(ref thisLocation.Latitude, ref thisLocation.Longitude);
+#endif
+
                 thisLocation.time = DateTime.Now;
                 thisLocation.same = (positionCount >= 2);
                 positionCount = 0;
@@ -284,14 +293,43 @@ namespace LocationService
                             }
                             if (savedLocations.Count >= maxLocations)
                             {
+                                //// start overwriting, randomly, over older data rather than starting to discard it altogether
+                                //int pos = rand.Next(maxLocations-1);
+                                //// savedLocations[pos] = thisLocation;
+                                //savedLocations[pos].Latitude = thisLocation.Latitude;
+                                //savedLocations[pos].Longitude = thisLocation.Longitude;
+                                //savedLocations[pos].time = thisLocation.time;
+
+#if TESTING
+                                string debug1;
+                                string debug2;
+                                string debug3;
+                                string debug4;
+                                string debug5;
+#endif
                                 // still too many, remove every other one
-                                for (int i = savedLocations.Count - 1; i >= 0; i -= 2)
+                                int locs = savedLocations.Count - 1;
+                                int removed = 0;
+                                while (locs >= 1)
                                 {
-                                    savedLocations.RemoveAt(i);
-                                }
+#if TESTING
+                                    if (locs > 6)
+                                    {
+                                        debug1 = savedLocations[locs].time.ToShortTimeString();
+                                        debug2 = savedLocations[locs - 1].time.ToLongTimeString();
+                                        debug3 = savedLocations[locs - 2].time.ToLongTimeString();
+                                        debug4 = savedLocations[locs - 3].time.ToLongTimeString();
+                                        debug5 = savedLocations[locs - 4].time.ToLongTimeString();
+                                    }
+#endif
+                                    savedLocations.RemoveAt(locs - 1);
+                                    ++removed;
+                                    locs = locs - 3;
+
+                                 }
+                                 builder.SetContentTitle("removed " + removed + " locations @"  + DateTime.Now.ToShortTimeString());
 
                             }
-                            builder.SetContentTitle("Shortened list @" + DateTime.Now.ToShortTimeString());
                             builder.SetContentText(savedLocations.Count + " positions stored");
                         }
 
